@@ -1,29 +1,29 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"regexp"
-	"strings"
 )
+
+var fillinPattern = regexp.MustCompile(`{{[-0-9A-Za-z_]+}}`)
 
 func Fillin(args []string) []string {
 	ret := make([]string, len(args))
-	reader := bufio.NewReader(os.Stdin)
+	var identifiers []string
+	for _, arg := range args {
+		matches := fillinPattern.FindAllString(arg, -1)
+		for _, match := range matches {
+			identifiers = append(identifiers, identifierFromMatch(match))
+		}
+	}
+	values := Resolve(identifiers)
 	for i, arg := range args {
-		ret[i] = fillinStr(arg, reader)
+		ret[i] = fillinPattern.ReplaceAllStringFunc(arg, func(match string) string {
+			return values[identifierFromMatch(match)]
+		})
 	}
 	return ret
 }
 
-var fillinPattern = regexp.MustCompile(`{{[-0-9A-Za-z_]+}}`)
-
-func fillinStr(str string, reader *bufio.Reader) string {
-	return fillinPattern.ReplaceAllStringFunc(str, func(match string) string {
-		identifier := match[2 : len(match)-2]
-		fmt.Printf("%s: ", identifier)
-		text, _ := reader.ReadString('\n')
-		return strings.TrimSuffix(text, "\n")
-	})
+func identifierFromMatch(match string) string {
+	return match[2 : len(match)-2]
 }
