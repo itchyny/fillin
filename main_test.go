@@ -30,6 +30,8 @@ func TestMain(t *testing.T) {
 				expected, err := ioutil.ReadFile(outfile)
 				if err != nil {
 					t.Errorf("FAIL: error on reading output file: " + outfile)
+				} else if strings.HasSuffix(string(output), string(expected)) {
+					t.Logf("PASS: " + path + "\n")
 				} else {
 					diffs := difflib.Diff(strings.Split(stderr.String()+string(output), "\n"), strings.Split(string(expected), "\n"))
 					differs := false
