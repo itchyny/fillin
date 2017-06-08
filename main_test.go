@@ -14,7 +14,7 @@ import (
 
 func TestMain(t *testing.T) {
 	build, _ := filepath.Abs("build")
-	envPath := os.Getenv("PATH") + ":" + build
+	envPath := build + ":" + os.Getenv("PATH")
 	filepath.Walk("test", func(path string, info os.FileInfo, err error) error {
 		if strings.HasSuffix(path, ".sh") {
 			cmd := exec.Command("bash", filepath.Base(path))
