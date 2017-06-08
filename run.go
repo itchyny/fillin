@@ -21,7 +21,7 @@ func run(args []string, env []string) error {
 	if err != nil {
 		return err
 	}
-	cmd := append(cmdBase, shellquote.Join(args...))
+	cmd := append(cmdBase, shellquote.Join(Fillin(args)...))
 	if err := syscall.Exec(sh, cmd, env); err != nil {
 		return err
 	}
