@@ -65,6 +65,10 @@ func quoteJoin(args []string) string {
 }
 
 func quote(arg string) string {
+	switch arg {
+	case "|", "||", "&&", ">", "<":
+		return arg
+	}
 quote:
 	for _, quote := range []bool{false, true} {
 		s := arg
