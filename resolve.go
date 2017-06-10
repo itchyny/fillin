@@ -23,6 +23,10 @@ func Resolve(identifiers []string, config *Config, in *bufio.Reader) map[string]
 			var text string
 			var err error
 			if in == nil {
+				line.ClearHistory()
+				for _, v := range config.history(identifier) {
+					line.AppendHistory(v)
+				}
 				text, err = line.Prompt(prompt)
 				if err != nil {
 					if err == liner.ErrPromptAborted || err == io.EOF {

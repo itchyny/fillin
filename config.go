@@ -66,3 +66,16 @@ func stringifyValue(values map[string]string) string {
 	}
 	return buf.String()
 }
+
+func (config *Config) history(identifier string) []string {
+	var values []string
+	scope := ""
+	if _, ok := config.Scopes[scope]; ok {
+		for _, value := range config.Scopes[scope].Values {
+			if v, ok := value[identifier]; ok {
+				values = append(values, v)
+			}
+		}
+	}
+	return values
+}
