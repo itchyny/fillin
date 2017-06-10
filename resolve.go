@@ -24,8 +24,9 @@ func Resolve(identifiers []string, config *Config, in *bufio.Reader) map[string]
 			var err error
 			if in == nil {
 				line.ClearHistory()
-				for _, v := range config.history(identifier) {
-					line.AppendHistory(v)
+				hs := config.history(id)
+				for i := len(hs) - 1; i >= 0; i-- {
+					line.AppendHistory(hs[i])
 				}
 				text, err = line.Prompt(prompt)
 				if err != nil {
