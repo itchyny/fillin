@@ -128,3 +128,21 @@ func Test_collectHistory(t *testing.T) {
 		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
 	}
 }
+
+func Test_collectScopedPairHistory(t *testing.T) {
+	hs1 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{keys: []string{"foo", "baz"}})
+	expected1 := []string{"Hello 1, world!", "Hello 2, world!"}
+	if !reflect.DeepEqual(hs1, expected1) {
+		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
+	}
+	hs2 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"test"}})
+	expected2 := []string{"Test"}
+	if !reflect.DeepEqual(hs2, expected2) {
+		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
+	}
+	hs3 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "foo", keys: []string{"test"}})
+	expected3 := []string{}
+	if !reflect.DeepEqual(hs3, expected3) {
+		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
+	}
+}
