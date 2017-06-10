@@ -56,10 +56,10 @@ example world!
 		expected: `echo こんにちは, 世界 +。:.ﾟ٩\(๑\>◡\<๑\)۶:.｡+ﾟ`,
 	},
 	{
-		args: []string{"echo", "{{foo}}", "|", "echo", "||", "echo", "&&", "echo", ">", "/dev/null", "<", "/dev/null"},
+		args: []string{"echo", "{{foo}}", "|", "echo", "||", "echo", "&&", "echo", ">", "/dev/null", "</dev/null", "2>&1", "1", ">&2"},
 		in: `Hello world!
 `,
-		expected: `echo 'Hello world!' | echo || echo && echo > /dev/null < /dev/null`,
+		expected: `echo 'Hello world!' | echo || echo && echo > /dev/null </dev/null 2>&1 1 >&2`,
 	},
 	{
 		args: []string{"echo", "{{foo}}", "{{bar}}"},
