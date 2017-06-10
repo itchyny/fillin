@@ -48,6 +48,14 @@ example world!
 		expected: `echo Hello, Hello, 'example world!'`,
 	},
 	{
+		args: []string{"echo", "{{foo}},", "{{bar}}", "{{baz}}"},
+		in: `こんにちは
+世界
++。:.ﾟ٩(๑>◡<๑)۶:.｡+ﾟ
+`,
+		expected: `echo こんにちは, 世界 +。:.ﾟ٩\(๑\>◡\<๑\)۶:.｡+ﾟ`,
+	},
+	{
 		args: []string{"echo", "{{foo}}", "|", "echo", "||", "echo", "&&", "echo", ">", "/dev/null", "<", "/dev/null"},
 		in: `Hello world!
 `,
