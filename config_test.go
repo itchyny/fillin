@@ -52,7 +52,13 @@ var configTests = []struct {
 				"sample": &Scope{
 					Values: []map[string]string{
 						{
-							"test": "Test",
+							"foo": "Test1, world!",
+							"bar": "test1, test",
+							"baz": "baz",
+						},
+						{
+							"foo": "Test2, world!",
+							"bar": "test2, test",
 						},
 					},
 				},
@@ -75,7 +81,13 @@ var configTests = []struct {
     "sample": {
       "values": [
         {
-          "test": "Test"
+          "bar": "test1, test",
+          "baz": "baz",
+          "foo": "Test1, world!"
+        },
+        {
+          "bar": "test2, test",
+          "foo": "Test2, world!"
         }
       ]
     }
@@ -117,8 +129,8 @@ func Test_collectHistory(t *testing.T) {
 	if !reflect.DeepEqual(hs1, expected1) {
 		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
 	}
-	hs2 := configTests[2].config.collectHistory(&Identifier{scope: "sample", key: "test"})
-	expected2 := []string{"Test"}
+	hs2 := configTests[2].config.collectHistory(&Identifier{scope: "sample", key: "foo"})
+	expected2 := []string{"Test1, world!", "Test2, world!"}
 	if !reflect.DeepEqual(hs2, expected2) {
 		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
 	}
@@ -135,14 +147,19 @@ func Test_collectScopedPairHistory(t *testing.T) {
 	if !reflect.DeepEqual(hs1, expected1) {
 		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
 	}
-	hs2 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"test"}})
-	expected2 := []string{"Test"}
+	hs2 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"foo", "bar"}})
+	expected2 := []string{"Test1,\\ world!, test1,\\ test", "Test2,\\ world!, test2,\\ test"}
 	if !reflect.DeepEqual(hs2, expected2) {
 		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
 	}
-	hs3 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "foo", keys: []string{"test"}})
-	expected3 := []string{}
+	hs3 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"foo", "bar", "baz"}})
+	expected3 := []string{"Test1,\\ world!, test1,\\ test, baz"}
 	if !reflect.DeepEqual(hs3, expected3) {
 		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
+	}
+	hs4 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "foo", keys: []string{"test"}})
+	expected4 := []string{}
+	if !reflect.DeepEqual(hs4, expected4) {
+		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected4, hs4)
 	}
 }
