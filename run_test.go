@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"reflect"
+	"sync"
 	"testing"
 )
 
@@ -46,4 +47,25 @@ func TestRun(t *testing.T) {
 			t.Errorf("command not correct (expected: %+v, got: %+v)", test.expected, cmd)
 		}
 	}
+}
+
+func TestRun_concurrently(t *testing.T) {
+	path := "./.test/concurrently.json"
+	test := runTests[1]
+	var wg sync.WaitGroup
+	for i := 0; i < 20; i++ {
+		go func() {
+			wg.Add(1)
+			defer wg.Done()
+			in := bufio.NewReader(bytes.NewBufferString(test.in))
+			cmd, err := Run(path, test.args, in)
+			if err != nil {
+				t.Errorf("error occurred unexpectedly: %+v", err)
+			}
+			if !reflect.DeepEqual(cmd, test.expected) {
+				t.Errorf("command not correct (expected: %+v, got: %+v)", test.expected, cmd)
+			}
+		}()
+	}
+	wg.Wait()
 }
