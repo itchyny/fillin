@@ -37,7 +37,7 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 		return "", err
 	}
 	w := new(bytes.Buffer)
-	cmd := quoteJoin(Fillin(args, rfile, w, in, out))
+	cmd := escapeJoin(Fillin(args, rfile, w, in, out))
 	rfile.Close() // not be defered due to rename
 	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
 	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
@@ -57,14 +57,14 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 	return cmd, nil
 }
 
-func quoteJoin(args []string) string {
+func escapeJoin(args []string) string {
 	for i, arg := range args {
-		args[i] = quote(arg)
+		args[i] = escape(arg)
 	}
 	return strings.Join(args, " ")
 }
 
-func quote(arg string) string {
+func escape(arg string) string {
 	switch arg {
 	case "|", "||", "&&", ">", "<":
 		return arg
