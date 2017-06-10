@@ -46,7 +46,8 @@ func TestRun(t *testing.T) {
 	path := "./.test/run.json"
 	for _, test := range runTests {
 		in := bufio.NewReader(bytes.NewBufferString(test.in))
-		cmd, err := Run(path, test.args, in)
+		out := bufio.NewWriter(new(bytes.Buffer))
+		cmd, err := Run(path, test.args, in, out)
 		if err != nil {
 			t.Errorf("error occurred unexpectedly: %+v", err)
 		}
@@ -65,7 +66,8 @@ func TestRun_concurrently(t *testing.T) {
 			wg.Add(1)
 			defer wg.Done()
 			in := bufio.NewReader(bytes.NewBufferString(test.in))
-			cmd, err := Run(path, test.args, in)
+			out := bufio.NewWriter(new(bytes.Buffer))
+			cmd, err := Run(path, test.args, in, out)
 			if err != nil {
 				t.Errorf("error occurred unexpectedly: %+v", err)
 			}

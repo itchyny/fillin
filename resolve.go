@@ -12,7 +12,7 @@ import (
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader) map[string]map[string]string {
+func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *bufio.Writer) map[string]map[string]string {
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
@@ -39,7 +39,8 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader) map[st
 					log.Fatal(err)
 				}
 			} else {
-				fmt.Printf(prompt)
+				out.WriteString(prompt)
+				out.Flush()
 				text, err = in.ReadString('\n')
 				if err != nil {
 					log.Fatal(err)

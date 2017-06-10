@@ -22,7 +22,7 @@ func collectIdentifiers(args []string) []*Identifier {
 }
 
 // Fillin fills in the command arguments
-func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader) []string {
+func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader, out *bufio.Writer) []string {
 	ret := make([]string, len(args))
 	config, err := ReadConfig(r)
 	if err != nil {
@@ -31,7 +31,7 @@ func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader) []string 
 	if config.Scopes == nil {
 		config.Scopes = make(map[string]*Scope)
 	}
-	values := Resolve(collectIdentifiers(args), config, in)
+	values := Resolve(collectIdentifiers(args), config, in, out)
 	insertValues(config.Scopes, values)
 	if err := WriteConfig(w, config); err != nil {
 		log.Fatal(err)

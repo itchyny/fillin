@@ -25,7 +25,7 @@ func init() {
 }
 
 // Run fillin
-func Run(configPath string, args []string, in *bufio.Reader) (string, error) {
+func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
 	path := filepath.Join(strings.Split(configPath, "/")...)
 	if path[0] == '~' {
 		path = homedir + path[1:]
@@ -38,7 +38,7 @@ func Run(configPath string, args []string, in *bufio.Reader) (string, error) {
 		return "", err
 	}
 	w := new(bytes.Buffer)
-	cmd := shellquote.Join(Fillin(args, rfile, w, in)...)
+	cmd := shellquote.Join(Fillin(args, rfile, w, in, out)...)
 	rfile.Close() // not be defered due to rename
 	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
 	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
