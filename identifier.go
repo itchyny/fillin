@@ -21,6 +21,18 @@ func found(values map[string]map[string]string, id *Identifier) bool {
 	return false
 }
 
+func collect(identifiers []*Identifier, scope string) *IdentifierGroup {
+	var keys []string
+	added := make(map[string]bool)
+	for _, id := range identifiers {
+		if scope == id.scope && !added[id.key] {
+			keys = append(keys, id.key)
+			added[id.key] = true
+		}
+	}
+	return &IdentifierGroup{scope: scope, keys: keys}
+}
+
 func insert(values map[string]map[string]string, id *Identifier, value string) {
 	if _, ok := values[id.scope]; !ok {
 		values[id.scope] = make(map[string]string)
