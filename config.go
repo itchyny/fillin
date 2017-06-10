@@ -88,6 +88,9 @@ func (config *Config) historyPairs(idg *IdentifierGroup) []string {
 			var vs []string
 			for _, key := range idg.keys {
 				if v, ok := value[key]; ok {
+					if strings.Contains(v, ", ") {
+						v = strings.Replace(v, ", ", ",\\ ", -1)
+					}
 					vs = append(vs, v)
 				} else {
 					contained = false

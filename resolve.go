@@ -52,7 +52,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 					if len(xs) == len(keys) {
 						for i, key := range keys {
 							id := &Identifier{scope: id.scope, key: key}
-							insert(values, id, xs[i])
+							insert(values, id, strings.Replace(xs[i], ",\\ ", ", ", -1))
 						}
 					}
 				}
