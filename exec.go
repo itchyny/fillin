@@ -15,6 +15,7 @@ func init() {
 	}
 }
 
+// Exec fillin
 func Exec() error {
 	sh, err := exec.LookPath(cmdBase[0])
 	if err != nil {
