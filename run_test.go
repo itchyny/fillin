@@ -91,8 +91,8 @@ func TestRun_concurrently(t *testing.T) {
 	test := runTests[1]
 	var wg sync.WaitGroup
 	for i := 0; i < 20; i++ {
+		wg.Add(1)
 		go func() {
-			wg.Add(1)
 			defer wg.Done()
 			in := bufio.NewReader(bytes.NewBufferString(test.in))
 			out := bufio.NewWriter(new(bytes.Buffer))
