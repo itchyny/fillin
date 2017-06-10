@@ -12,14 +12,17 @@ import (
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []string, config *Config, in *bufio.Reader) map[string]string {
+func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader) map[string]map[string]string {
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
-	values := make(map[string]string, len(identifiers))
-	for _, identifier := range identifiers {
-		if _, ok := values[identifier]; !ok {
-			prompt := fmt.Sprintf("%s: ", identifier)
+	values := make(map[string]map[string]string)
+	for _, id := range identifiers {
+		if !found(values, id) {
+			prompt := fmt.Sprintf("%s: ", id.key)
+			if id.scope != "" {
+				prompt = fmt.Sprintf("[%s] %s: ", id.scope, id.key)
+			}
 			var text string
 			var err error
 			if in == nil {
@@ -42,7 +45,7 @@ func Resolve(identifiers []string, config *Config, in *bufio.Reader) map[string]
 					log.Fatal(err)
 				}
 			}
-			values[identifier] = strings.TrimSuffix(text, "\n")
+			insert(values, id, strings.TrimSuffix(text, "\n"))
 		}
 	}
 	return values
