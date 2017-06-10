@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"os"
 	"os/exec"
 	"runtime"
@@ -22,8 +21,7 @@ func Exec() error {
 		return err
 	}
 	configPath := "~/.config/fillin/fillin.json"
-	in := bufio.NewReader(os.Stdin)
-	cmd, err := Run(configPath, os.Args[1:], in)
+	cmd, err := Run(configPath, os.Args[1:], nil)
 	if err != nil {
 		return err
 	}
