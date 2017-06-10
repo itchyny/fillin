@@ -72,6 +72,7 @@ func quote(arg string) string {
 quote:
 	for _, quote := range []bool{false, true} {
 		s := arg
+		isHead, afterFd, afterRedirect := true, false, false
 		var buf bytes.Buffer
 		if quote {
 			buf.WriteByte('\'')
@@ -79,7 +80,17 @@ quote:
 		for len(s) > 0 {
 			c, l := utf8.DecodeRuneInString(s)
 			s = s[l:]
-			if strings.ContainsRune("\\'\"`${[|&;<>()*?!", c) && !quote {
+			if (isHead || afterFd) && strings.ContainsRune("<>", c) && !quote {
+				buf.WriteRune(c)
+				isHead, afterFd, afterRedirect = false, false, true
+				continue
+			} else if isHead && strings.ContainsRune("12", c) && !quote {
+				buf.WriteRune(c)
+				isHead, afterFd = false, true
+				continue
+			} else if afterRedirect && strings.ContainsRune("&", c) && !quote {
+				buf.WriteRune(c)
+			} else if strings.ContainsRune("\\'\"`${[|&;<>()*?!", c) && !quote {
 				buf.WriteByte('\\')
 				buf.WriteRune(c)
 			} else if c == rune(' ') && !quote {
@@ -94,6 +105,7 @@ quote:
 			} else {
 				buf.WriteRune(c)
 			}
+			isHead, afterFd, afterRedirect = false, false, false
 		}
 		if quote {
 			buf.WriteByte('\'')
