@@ -30,7 +30,7 @@ func init() {
 }
 
 // Run fillin
-func Run(args []string, env []string) error {
+func Run(args []string) error {
 	sh, err := exec.LookPath(cmdBase[0])
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func Run(args []string, env []string) error {
 	if err := os.Rename(tmp, path); err != nil {
 		return err
 	}
-	if err := syscall.Exec(sh, cmd, env); err != nil {
+	if err := syscall.Exec(sh, cmd, os.Environ()); err != nil {
 		return err
 	}
 	return nil
