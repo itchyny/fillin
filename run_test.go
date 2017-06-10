@@ -47,6 +47,19 @@ example world!
 `,
 		expected: `echo Hello, Hello, 'example world!'`,
 	},
+	{
+		args: []string{"echo", "{{foo}}", "|", "echo", "||", "echo", "&&", "echo", ">", "/dev/null", "<", "/dev/null"},
+		in: `Hello world!
+`,
+		expected: `echo 'Hello world!' | echo || echo && echo > /dev/null < /dev/null`,
+	},
+	{
+		args: []string{"echo", "{{foo}}", "{{bar}}"},
+		in: `\'"${[]}|&;<>()*?!
+	foo bar baz
+`,
+		expected: `echo \\\'\"\$\{\[]}\|\&\;\<\>\(\)\*\?\! '\tfoo bar baz'`,
+	},
 }
 
 func TestRun(t *testing.T) {
