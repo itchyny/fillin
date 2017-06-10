@@ -23,6 +23,9 @@ func ReadConfig(r io.Reader) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(bytes) == 0 {
+		return &config, nil
+	}
 	err = json.Unmarshal(bytes, &config)
 	if err != nil {
 		return nil, err
