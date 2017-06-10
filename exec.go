@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 	"syscall"
 )
 
@@ -18,6 +20,16 @@ func init() {
 
 // Exec fillin
 func Exec() error {
+	if len(os.Args) >= 2 {
+		switch os.Args[1] {
+		case "-v", "-version", "--version":
+			printVersion()
+			return nil
+		case "-h", "-help", "--help":
+			printHelp()
+			return nil
+		}
+	}
 	sh, err := exec.LookPath(cmdBase[0])
 	if err != nil {
 		return err
@@ -31,4 +43,28 @@ func Exec() error {
 		return err
 	}
 	return nil
+}
+
+func printVersion() {
+	fmt.Printf("%s version %s\n", name, version)
+}
+
+func printHelp() {
+	fmt.Printf(strings.Replace(`NAME:
+   $NAME - %s
+
+USAGE:
+   $NAME command...
+
+EXAMPLES:
+   $NAME echo {{sample}}
+   $NAME curl -u {{api:auth}} {{api:host}}/api/example
+   $NAME psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
+
+VERSION:
+   %s
+
+AUTHOR:
+   %s
+`, "$NAME", name, -1), description, version, author)
 }
