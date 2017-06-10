@@ -32,8 +32,11 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 					}
 				}
 				if len(keys) > 0 {
-					line.ClearHistory()
 					hs := config.historyPairs(&IdentifierGroup{scope: id.scope, keys: keys})
+					if len(hs) == 0 {
+						continue
+					}
+					line.ClearHistory()
 					for i := len(hs) - 1; i >= 0; i-- {
 						line.AppendHistory(hs[i])
 					}
