@@ -26,6 +26,13 @@ world test!
 		expected: `echo 'Hello test,' 'world test!'`,
 	},
 	{
+		args: []string{"echo", "{{ foo-bar_baz }}", "{{__FOO-9 : 0-BAR__}}"},
+		in: `Foo bar
+FOO BAR
+`,
+		expected: `echo 'Foo bar' 'FOO BAR'`,
+	},
+	{
 		args: []string{"echo", "{{foo}},", "{{bar}},", "{{foo}}-{{bar}}-{{baz}}"},
 		in: `Hello
 wonderful
