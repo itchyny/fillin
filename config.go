@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"sort"
+	"strings"
 )
 
 // Config for fillin
@@ -73,6 +74,28 @@ func (config *Config) history(id *Identifier) []string {
 		for _, value := range config.Scopes[id.scope].Values {
 			if v, ok := value[id.key]; ok {
 				values = append(values, v)
+			}
+		}
+	}
+	return values
+}
+
+func (config *Config) historyPairs(idg *IdentifierGroup) []string {
+	var values []string
+	if _, ok := config.Scopes[idg.scope]; ok {
+		for _, value := range config.Scopes[idg.scope].Values {
+			contained := true
+			var vs []string
+			for _, key := range idg.keys {
+				if v, ok := value[key]; ok {
+					vs = append(vs, v)
+				} else {
+					contained = false
+					break
+				}
+			}
+			if contained {
+				values = append(values, strings.Join(vs, ", "))
 			}
 		}
 	}

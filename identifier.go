@@ -6,6 +6,12 @@ type Identifier struct {
 	key   string
 }
 
+// IdentifierGroup ...
+type IdentifierGroup struct {
+	scope string
+	keys  []string
+}
+
 func found(values map[string]map[string]string, id *Identifier) bool {
 	if v, ok := values[id.scope]; ok {
 		if _, ok := v[id.key]; ok {
