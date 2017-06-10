@@ -6,3 +6,26 @@ env: PATH=/home/travis/gopath/bin:$PATH
 script:
   - make test
   - make lint
+  - make cross
+deploy:
+  provider: releases
+  api_key:
+    secure: BroaOmQdP7xPvXjlrSje27B+IUbXa/jbhHMurIMMSPJQ1JihNBqfM8TzW2bdqvmxvkaUOvDw5UES9yX/oVQ7sEzkQnsZpByrMGtvMfmtnuYsqBHjvRG3WURaMZY9TwmMAe/MV4JO8j8kwY+qwkJycHwOWSJ1JI9+LnnayLy3UJS+6paTeFoxZqFCo2RFsa7Kjizl3/0s99PhBImpImFkOLs8kBivHGypqrVs7B7/nVKbBlLHK9vZgMUqzfftQ776Jc/FUDb6+/DVZDmMDZPTOyHwJenp3E7JPs7FLYMZ1sR/twGg5V2F+vFNt6klkvN4hWLpzXapdN59wFHoMjj8FAzjiGBseIK0ZAlJklZHZJmbRm6XNGWmZ0svfLYNsymEF83vbRjrc0EQwMccV9rRh7zCbBeY69QT+1ktG+/9Z3Dlf13eEUrcPAUHgmlUfRtT2AD4F9pIcgatl9k2kvrEg5U5WEdR9u1iDsUp44tzrnBsb6wCdylFtcwStWgFMEjBdfYlcMpnA7KAyNFm/l5boyYgVK6lzZuq7Ws2xgcDs/UnOnNvCIwy+zSrp+Aq7Byb0DBHp6uhP7LN0CYQiRKEyxKy3x+fWu/QcITWRSUNbtTwJzfh7ymV/qG2iOMTFr+ORTk5fJQDKvKGswTMI1er9rF9gKEhTnivADtE7Z0YuG8=
+  file:
+    - snapshot/fillin_darwin_386.zip
+    - snapshot/fillin_darwin_amd64.zip
+    - snapshot/fillin_freebsd_386.zip
+    - snapshot/fillin_freebsd_amd64.zip
+    - snapshot/fillin_freebsd_arm.zip
+    - snapshot/fillin_linux_386.tar.gz
+    - snapshot/fillin_linux_amd64.tar.gz
+    - snapshot/fillin_linux_arm.tar.gz
+    - snapshot/fillin_netbsd_386.zip
+    - snapshot/fillin_netbsd_amd64.zip
+    - snapshot/fillin_netbsd_arm.zip
+    - snapshot/fillin_windows_386.zip
+    - snapshot/fillin_windows_amd64.zip
+  on:
+    repo: itchyny/fillin
+    tags: true
+    all_branches: false
