@@ -31,7 +31,7 @@ func init() {
 }
 
 // Run fillin
-func Run(configPath string, args []string) error {
+func Run(configPath string, args []string, in *bufio.Reader) ([]string, error) {
 	sh, err := exec.LookPath(cmdBase[0])
 	if err != nil {
 		return err

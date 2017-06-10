@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"io"
 	"log"
 	"regexp"
@@ -9,7 +10,7 @@ import (
 var fillinPattern = regexp.MustCompile(`{{[-0-9A-Za-z_]+}}`)
 
 // Fillin fills in the command arguments
-func Fillin(args []string, r io.Reader, w io.Writer) []string {
+func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader) []string {
 	ret := make([]string, len(args))
 	var identifiers []string
 	for _, arg := range args {
@@ -25,7 +26,7 @@ func Fillin(args []string, r io.Reader, w io.Writer) []string {
 	if config.Scopes == nil {
 		config.Scopes = make(map[string]*Scope)
 	}
-	values := Resolve(identifiers, config)
+	values := Resolve(identifiers, config, in)
 	scope := ""
 	if _, ok := config.Scopes[scope]; !ok {
 		config.Scopes[scope] = &Scope{}
