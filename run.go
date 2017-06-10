@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/kballard/go-shellquote"
@@ -30,12 +31,15 @@ func init() {
 }
 
 // Run fillin
-func Run(args []string) error {
+func Run(configPath string, args []string) error {
 	sh, err := exec.LookPath(cmdBase[0])
 	if err != nil {
 		return err
 	}
-	path := filepath.Join(homedir, ".config", "fillin", "fillin.json")
+	path := filepath.Join(strings.Split(configPath, "/")...)
+	if path[0] == '~' {
+		path = homedir + path[1:]
+	}
 	if err = os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err
 	}

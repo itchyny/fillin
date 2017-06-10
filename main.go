@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	if err := Run(os.Args[1:]); err != nil {
+	configPath := "~/.config/fillin/fillin.json"
+	if err := Run(configPath, os.Args[1:]); err != nil {
 		log.Fatal(err)
 	}
 }
