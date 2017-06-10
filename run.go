@@ -66,7 +66,7 @@ func escapeJoin(args []string) string {
 
 func escape(arg string) string {
 	switch arg {
-	case "|", "||", "&&", ">", "<":
+	case "|", "||", "&&", ">", ">>", "<":
 		return arg
 	}
 quote:
@@ -84,6 +84,8 @@ quote:
 				buf.WriteRune(c)
 				isHead, afterFd, afterRedirect = false, false, true
 				continue
+			} else if afterRedirect && strings.ContainsRune("<>", c) && !quote {
+				buf.WriteRune(c)
 			} else if isHead && strings.ContainsRune("12", c) && !quote {
 				buf.WriteRune(c)
 				isHead, afterFd = false, true
