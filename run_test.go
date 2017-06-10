@@ -33,6 +33,13 @@ world!
 `,
 		expected: `echo Hello, wonderful, Hello-wonderful-world\!`,
 	},
+	{
+		args: []string{"echo", "{{foo:bar}},", "{{ foo : bar }},", "{{foo:baz}}"},
+		in: `Hello
+example world!
+`,
+		expected: `echo Hello, Hello, 'example world!'`,
+	},
 }
 
 func TestRun(t *testing.T) {
