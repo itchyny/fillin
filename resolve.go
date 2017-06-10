@@ -16,6 +16,12 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
+	setHistory := func(history []string) {
+		line.ClearHistory()
+		for i := len(history) - 1; i >= 0; i-- {
+			line.AppendHistory(history[i])
+		}
+	}
 	values := make(map[string]map[string]string)
 
 	scopeAsked := make(map[string]bool)
@@ -36,14 +42,11 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			if len(keys) == 0 {
 				continue
 			}
-			hs := config.historyPairs(&IdentifierGroup{scope: id.scope, keys: keys})
-			if len(hs) == 0 {
+			history := config.historyPairs(&IdentifierGroup{scope: id.scope, keys: keys})
+			if len(history) == 0 {
 				continue
 			}
-			line.ClearHistory()
-			for i := len(hs) - 1; i >= 0; i-- {
-				line.AppendHistory(hs[i])
-			}
+			setHistory(history)
 			prompt := fmt.Sprintf("[%s] %s: ", id.scope, strings.Join(keys, ", "))
 			text, err := line.Prompt(prompt)
 			if err != nil {
@@ -73,11 +76,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		var text string
 		var err error
 		if in == nil {
-			line.ClearHistory()
-			hs := config.history(id)
-			for i := len(hs) - 1; i >= 0; i-- {
-				line.AppendHistory(hs[i])
-			}
+			setHistory(config.history(id))
 			text, err = line.Prompt(prompt)
 			if err != nil {
 				if err == liner.ErrPromptAborted || err == io.EOF {
