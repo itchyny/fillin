@@ -75,11 +75,16 @@ This command line utility is in its early developing stage.
 The user interface may be changed without any announcement.
 
 ## Installation
+### Homebrew
+```sh
+ $ brew install itchyny/fillin/fillin
+```
+
 ### Download binary from GitHub Releases
 [Releases・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/releases)
 
 ### Build from source
-```bash
+```sh
  $ go get -u github.com/itchyny/fillin
 ```
 
