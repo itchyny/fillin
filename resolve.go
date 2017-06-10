@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-func Resolve(identifiers []string) map[string]string {
+// Resolve asks the user to resolve the identifiers
+func Resolve(identifiers []string, config *Config) map[string]string {
 	reader := bufio.NewReader(os.Stdin)
 	values := make(map[string]string, len(identifiers))
 	for _, identifier := range identifiers {

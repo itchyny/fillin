@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	if err := run(os.Args[1:], os.Environ()); err != nil {
+	if err := Run(os.Args[1:], os.Environ()); err != nil {
 		log.Fatal(err)
 	}
 }
