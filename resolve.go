@@ -22,6 +22,14 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			line.AppendHistory(history[i])
 		}
 	}
+	checkErr := func(err error) {
+		if err != nil {
+			if err == liner.ErrPromptAborted || err == io.EOF {
+				os.Exit(1)
+			}
+			log.Fatal(err)
+		}
+	}
 	values := make(map[string]map[string]string)
 
 	scopeAsked := make(map[string]bool)
@@ -42,17 +50,11 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			setHistory(history)
 			prompt := fmt.Sprintf("[%s] %s: ", id.scope, strings.Join(idg.keys, ", "))
 			text, err := line.Prompt(prompt)
-			if err != nil {
-				if err == liner.ErrPromptAborted || err == io.EOF {
-					os.Exit(1)
-				}
-				log.Fatal(err)
-			}
+			checkErr(err)
 			xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
 			if len(xs) == len(idg.keys) {
 				for i, key := range idg.keys {
-					id := &Identifier{scope: id.scope, key: key}
-					insert(values, id, strings.Replace(xs[i], ",\\ ", ", ", -1))
+					insert(values, &Identifier{scope: id.scope, key: key}, strings.Replace(xs[i], ",\\ ", ", ", -1))
 				}
 			}
 		}
@@ -71,12 +73,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		if in == nil {
 			setHistory(config.history(id))
 			text, err = line.Prompt(prompt)
-			if err != nil {
-				if err == liner.ErrPromptAborted || err == io.EOF {
-					os.Exit(1)
-				}
-				log.Fatal(err)
-			}
+			checkErr(err)
 		} else {
 			out.WriteString(prompt)
 			out.Flush()
