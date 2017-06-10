@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -50,6 +51,33 @@ func Test_found(t *testing.T) {
 		if got != test.found {
 			t.Errorf("found not correct for %+v (found: %+v, got: %+v)", test.id, test.found, got)
 		}
+	}
+}
+
+func Test_collect(t *testing.T) {
+	ids := []*Identifier{
+		&Identifier{scope: "foo", key: "foo"},
+		&Identifier{scope: "foo", key: "bar"},
+		&Identifier{scope: "zoo", key: "foo"},
+		&Identifier{scope: "foo", key: "foo"},
+		&Identifier{scope: "foo", key: "baz"},
+		&Identifier{scope: "qux", key: "bar"},
+	}
+	expectedFoo := &IdentifierGroup{
+		scope: "foo",
+		keys:  []string{"foo", "bar", "baz"},
+	}
+	expectedBar := &IdentifierGroup{
+		scope: "bar",
+		keys:  nil,
+	}
+	idgFoo := collect(ids, "foo")
+	if !reflect.DeepEqual(idgFoo, expectedFoo) {
+		t.Errorf("collect not correct (expected: %+v, got: %+v)", expectedFoo, idgFoo)
+	}
+	idgBar := collect(ids, "bar")
+	if !reflect.DeepEqual(idgBar, expectedBar) {
+		t.Errorf("collect not correct (expected: %+v, got: %+v)", expectedBar, idgBar)
 	}
 }
 
