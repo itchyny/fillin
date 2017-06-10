@@ -11,7 +11,7 @@ Some incremental fuzzy searchers have troubles when there are many random tokens
 Yeah, I know that I should not type a authorization token directly in the command line, but it's much easier than creating some shell script snippets.
 
 Another hint to implement `fillin` is that programmers execute same commands switching servers.
-We do not just login with `ssh {{host}}`, we also connect to the database with `psql -h {{hostname}} {{dbname}} -U {{username}}` and to Redis server with `redis-cli -h {{hostname}} -p {{port}}`.
+We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{hostname}} {{dbname}} -U {{username}}` and to Redis server with `redis-cli -h {{hostname}} -p {{port}}`.
 We switch the host argument from the localhost (you may omit this), staging and production servers.
 
 The main idea is that splitting the command history and the template variable history.
@@ -71,6 +71,31 @@ Without the grouping behaviour, variable history searching will lead you to an u
 
 In order to have the benefit of this grouping behaviour, it's strongly recommended to prepend the scope name.
 The `psql:` prefix on connecting to PostgreSQL database server, `redis:` prefix for Redis server are useful best practice in my opinion.
+
+## Problem with pipe and redirect
+The terminal interface of `fillin` is currently have problem with pipe and redirect.
+For example, the following command will get stuck the terminal interface.
+```sh
+ $ fillin echo {{message}} | jq .
+^M^M^C
+```
+This is because the interface of `fillin` is rely on the standard output.
+Instead of connecting the output of `fillin` to another command, pass the pipe character as an argument.
+```sh
+ $ fillin echo {{message}} \| jq .
+message: {}
+{}
+ $ # or
+ $ fillin echo {{message}} '|' jq .
+message: {}
+{}
+```
+Same problem occurs with redirect so please escape `>`.
+```sh
+ $ fillin echo {{message}} \> /tmp/message
+ $ # or
+ $ fillin echo {{message}} '>' /tmp/message
+```
 
 ## Disclaimer
 This command line tool is in its early developing stage.
