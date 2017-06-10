@@ -3,11 +3,12 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"os/user"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/kballard/go-shellquote"
@@ -39,7 +40,7 @@ func Run(configPath string, args []string, in *bufio.Reader) (string, error) {
 	w := new(bytes.Buffer)
 	cmd := shellquote.Join(Fillin(args, rfile, w, in)...)
 	rfile.Close() // not be defered due to rename
-	tmpFileName := "fillin." + strconv.Itoa(os.Getpid()) + ".json"
+	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
 	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
 	defer os.Remove(tmp)
 	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE, 0644)
