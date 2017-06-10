@@ -10,8 +10,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"strings"
-
-	"github.com/kballard/go-shellquote"
+	"unicode/utf8"
 )
 
 var homedir string
@@ -38,7 +37,7 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 		return "", err
 	}
 	w := new(bytes.Buffer)
-	cmd := shellquote.Join(Fillin(args, rfile, w, in, out)...)
+	cmd := quoteJoin(Fillin(args, rfile, w, in, out))
 	rfile.Close() // not be defered due to rename
 	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
 	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
@@ -56,4 +55,46 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 		return "", err
 	}
 	return cmd, nil
+}
+
+func quoteJoin(args []string) string {
+	for i, arg := range args {
+		args[i] = quote(arg)
+	}
+	return strings.Join(args, " ")
+}
+
+func quote(arg string) string {
+quote:
+	for _, quote := range []bool{false, true} {
+		s := arg
+		var buf bytes.Buffer
+		if quote {
+			buf.WriteByte('\'')
+		}
+		for len(s) > 0 {
+			c, l := utf8.DecodeRuneInString(s)
+			s = s[l:]
+			if strings.ContainsRune("\\'\"`${[|&;<>()*?!", c) && !quote {
+				buf.WriteByte('\\')
+				buf.WriteRune(c)
+			} else if c == rune(' ') && !quote {
+				continue quote
+			} else if c == rune('\t') {
+				if quote {
+					buf.WriteByte('\\')
+					buf.WriteByte('t')
+				} else {
+					continue quote
+				}
+			} else {
+				buf.WriteRune(c)
+			}
+		}
+		if quote {
+			buf.WriteByte('\'')
+		}
+		return buf.String()
+	}
+	return ""
 }
