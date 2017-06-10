@@ -68,7 +68,7 @@ func stringifyValue(values map[string]string) string {
 	return buf.String()
 }
 
-func (config *Config) history(id *Identifier) []string {
+func (config *Config) collectHistory(id *Identifier) []string {
 	var values []string
 	if _, ok := config.Scopes[id.scope]; ok {
 		for _, value := range config.Scopes[id.scope].Values {
@@ -80,7 +80,7 @@ func (config *Config) history(id *Identifier) []string {
 	return values
 }
 
-func (config *Config) historyPairs(idg *IdentifierGroup) []string {
+func (config *Config) collectScopedPairHistory(idg *IdentifierGroup) []string {
 	var values []string
 	if _, ok := config.Scopes[idg.scope]; ok {
 		for _, value := range config.Scopes[idg.scope].Values {

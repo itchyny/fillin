@@ -43,7 +43,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			if len(idg.keys) == 0 {
 				continue
 			}
-			history := config.historyPairs(idg)
+			history := config.collectScopedPairHistory(idg)
 			if len(history) == 0 {
 				continue
 			}
@@ -71,7 +71,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		var text string
 		var err error
 		if in == nil {
-			setHistory(config.history(id))
+			setHistory(config.collectHistory(id))
 			text, err = line.Prompt(prompt)
 			checkErr(err)
 		} else {
