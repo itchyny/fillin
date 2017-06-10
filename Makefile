@@ -26,7 +26,7 @@ lintdeps:
 	go get -u github.com/golang/lint/golint
 
 clean:
-	rm -rf build
+	rm -rf build .test
 	go clean
 
 .PHONY: build deps test testdeps lint lintdeps clean
