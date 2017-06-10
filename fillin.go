@@ -5,9 +5,10 @@ import (
 	"io"
 	"log"
 	"regexp"
+	"strings"
 )
 
-var fillinPattern = regexp.MustCompile(`{{[-0-9A-Za-z_]+}}`)
+var fillinPattern = regexp.MustCompile(`{{\s*[-0-9A-Za-z_]+(\s*:\s*[-0-9A-Za-z_]+)?\s*}}`)
 
 func collectIdentifiers(args []string) []*Identifier {
 	var identifiers []*Identifier
@@ -44,9 +45,16 @@ func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader) []string 
 }
 
 func identifierFromMatch(match string) *Identifier {
-	return &Identifier{
-		key: match[2 : len(match)-2],
+	match = match[2 : len(match)-2]
+	var scope, key string
+	if strings.ContainsRune(match, ':') {
+		xs := strings.Split(match, ":")
+		scope = strings.TrimSpace(xs[0])
+		key = strings.TrimSpace(xs[1])
+	} else {
+		key = strings.TrimSpace(match)
 	}
+	return &Identifier{scope, key}
 }
 
 func insertValues(scopes map[string]*Scope, values map[string]map[string]string) {
