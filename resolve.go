@@ -31,23 +31,16 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 				continue
 			}
 			scopeAsked[id.scope] = true
-			var keys []string
-			added := make(map[string]bool)
-			for _, d := range identifiers {
-				if id.scope == d.scope && !added[d.key] {
-					keys = append(keys, d.key)
-					added[d.key] = true
-				}
-			}
-			if len(keys) == 0 {
+			idg := collect(identifiers, id.scope)
+			if len(idg.keys) == 0 {
 				continue
 			}
-			history := config.historyPairs(&IdentifierGroup{scope: id.scope, keys: keys})
+			history := config.historyPairs(idg)
 			if len(history) == 0 {
 				continue
 			}
 			setHistory(history)
-			prompt := fmt.Sprintf("[%s] %s: ", id.scope, strings.Join(keys, ", "))
+			prompt := fmt.Sprintf("[%s] %s: ", id.scope, strings.Join(idg.keys, ", "))
 			text, err := line.Prompt(prompt)
 			if err != nil {
 				if err == liner.ErrPromptAborted || err == io.EOF {
@@ -56,8 +49,8 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 				log.Fatal(err)
 			}
 			xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
-			if len(xs) == len(keys) {
-				for i, key := range keys {
+			if len(xs) == len(idg.keys) {
+				for i, key := range idg.keys {
 					id := &Identifier{scope: id.scope, key: key}
 					insert(values, id, strings.Replace(xs[i], ",\\ ", ", ", -1))
 				}
