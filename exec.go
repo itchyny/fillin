@@ -57,7 +57,7 @@ USAGE:
    $NAME command...
 
 EXAMPLES:
-   $NAME echo {{sample}}
+   $NAME echo {{message}}
    $NAME curl -u {{api:auth}} {{api:host}}/api/example
    $NAME psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
 
