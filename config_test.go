@@ -110,3 +110,21 @@ func TestWriteConfig(t *testing.T) {
 		}
 	}
 }
+
+func Test_collectHistory(t *testing.T) {
+	hs1 := configTests[2].config.collectHistory(&Identifier{key: "foo"})
+	expected1 := []string{"Hello 1", "Hello 2"}
+	if !reflect.DeepEqual(hs1, expected1) {
+		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
+	}
+	hs2 := configTests[2].config.collectHistory(&Identifier{scope: "sample", key: "test"})
+	expected2 := []string{"Test"}
+	if !reflect.DeepEqual(hs2, expected2) {
+		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
+	}
+	hs3 := configTests[2].config.collectHistory(&Identifier{scope: "foo", key: "test"})
+	expected3 := []string{}
+	if !reflect.DeepEqual(hs3, expected3) {
+		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
+	}
+}
