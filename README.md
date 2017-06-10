@@ -20,6 +20,20 @@ With this `fillin` command line tool, you can
 - make your commands reusable and it will make incremental shell history searching easy.
 - fill in template variables interactively and their history will be stored locally.
 
+## Installation
+### Homebrew
+```sh
+ $ brew install itchyny/fillin/fillin
+```
+
+### Download binary from GitHub Releases
+[Releases・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/releases)
+
+### Build from source
+```sh
+ $ go get -u github.com/itchyny/fillin
+```
+
 ## Usage
 The interface of the `fillin` command is very simple.
 Prepend `fillin` to the command and create template variables with `{{...}}`.
@@ -103,20 +117,6 @@ The user interface may be changed without any announcement.
 
 This tool is not an encryption tool.
 The command saves the inputted values in a JSON file with no encryption.
-
-## Installation
-### Homebrew
-```sh
- $ brew install itchyny/fillin/fillin
-```
-
-### Download binary from GitHub Releases
-[Releases・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/releases)
-
-### Build from source
-```sh
- $ go get -u github.com/itchyny/fillin
-```
 
 ## Bug Tracker
 Report bug at [Issues・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/issues).
