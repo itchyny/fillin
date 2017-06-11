@@ -14,7 +14,12 @@ Another hint to implement `fillin` is that programmers execute same commands swi
 We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}` and to Redis server with `redis-cli -h {{redis:hostname}} -p {{redis:port}}`.
 We switch the host argument from the localhost (you may omit this), staging and production servers.
 
-Some command line tools allow us to login cloud services and retrieve data from our terminal. Most of such cli tools accept an option to switching between the account. For example, AWS command line tool has `--profile` option. Other typical names of options are `--region`, `--conf` and `--account`. When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions. The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} [do what]` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
+Some command line tools allow us to login cloud services and retrieve data from our terminal.
+Most of such cli tools accept an option to switching between the account.
+For example, AWS command line tool has `--profile` option.
+Other typical names of options are `--region`, `--conf` and `--account`.
+When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions.
+The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} ec2 describe-instances` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
 
 The core concept of `fillin` is that it'll make easy to search through the shell history by splitting the command history and the template variable history.
 With this `fillin` command line tool, you can
