@@ -1,15 +1,31 @@
 package main
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Identifier ...
 type Identifier struct {
 	scope string
 	key   string
 }
 
+func (id *Identifier) prompt() string {
+	if id.scope == "" {
+		return fmt.Sprintf("%s: ", id.key)
+	}
+	return fmt.Sprintf("[%s] %s: ", id.scope, id.key)
+}
+
 // IdentifierGroup ...
 type IdentifierGroup struct {
 	scope string
 	keys  []string
+}
+
+func (idg *IdentifierGroup) prompt() string {
+	return fmt.Sprintf("[%s] %s: ", idg.scope, strings.Join(idg.keys, ", "))
 }
 
 func found(values map[string]map[string]string, id *Identifier) bool {
