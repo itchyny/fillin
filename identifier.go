@@ -40,6 +40,17 @@ func insert(values map[string]map[string]string, id *Identifier, value string) {
 	values[id.scope][id.key] = value
 }
 
+func empty(values map[string]map[string]string) bool {
+	for scope := range values {
+		for key := range values[scope] {
+			if values[scope][key] != "" {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func lookup(values map[string]map[string]string, id *Identifier) string {
 	if v, ok := values[id.scope]; ok {
 		if v, ok := v[id.key]; ok {
