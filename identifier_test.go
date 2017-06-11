@@ -45,6 +45,24 @@ var identifierTests = []struct {
 	},
 }
 
+func Test_prompt(t *testing.T) {
+	id1 := &Identifier{key: "foo"}
+	got := id1.prompt()
+	if got != "foo: " {
+		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", id1, "foo: ", got)
+	}
+	id2 := &Identifier{scope: "foo", key: "bar"}
+	got = id2.prompt()
+	if got != "[foo] bar: " {
+		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", id2, "[foo] bar: ", got)
+	}
+	idg := &IdentifierGroup{scope: "foo", keys: []string{"bar", "baz", "qux"}}
+	got = idg.prompt()
+	if got != "[foo] bar, baz, qux: " {
+		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", idg, "[foo] bar, baz, qux: ", got)
+	}
+}
+
 func Test_found(t *testing.T) {
 	for _, test := range identifierTests {
 		got := found(test.values, &test.id)
