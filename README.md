@@ -11,15 +11,17 @@ Some incremental fuzzy searchers have troubles when there are many random tokens
 Yeah, I know that I should not type a authorization token directly in the command line, but it's much easier than creating some shell script snippets.
 
 Another hint to implement `fillin` is that programmers execute same commands switching servers.
-We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{hostname}} -U {{username}} -d {{dbname}}` and to Redis server with `redis-cli -h {{hostname}} -p {{port}}`.
+We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}` and to Redis server with `redis-cli -h {{redis:hostname}} -p {{redis:port}}`.
 We switch the host argument from the localhost (you may omit this), staging and production servers.
 
-The main idea is that splitting the command history and the template variable history.
+Some command line tools allow us to login cloud services and retrieve data from our terminal. Most of such cli tools accept an option to switching between the account. For example, AWS command line tool has `--profile` option. Other typical names of options are `--region`, `--conf` and `--account`. When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions. The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} [do what]` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
+
+The core concept of `fillin` is that it'll make easy to search through the shell history by splitting the command history and the template variable history.
 With this `fillin` command line tool, you can
 
 - make your commands reusable and it will make incremental shell history searching easy.
 - fill in the template variables interactively and their history will be stored locally.
-- easily switch between the local, staging and production servers.
+- easily switch between multiple environment (local, staging and production servers or some accounts on cloud services).
 
 ## Installation
 ### Homebrew
