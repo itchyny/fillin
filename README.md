@@ -81,7 +81,7 @@ The scope grouping behaviour is useful with some authorization keys.
  $ fillin curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
 [example-api] base-url, access-token: example.com, accesstokenabcde012345
 ```
-The `base-url` and `access-token` are stored as tuples so you can easily switch local, staging and production environment authorization.
+The `base-url` and `access-token` are stored as tuples so you can easily switch between local, staging and production environment authorization.
 Without the grouping behaviour, variable history searching will lead you to an unmatched pair of `base-url` and `access-token`.
 Since the curl endpoint are stored in the shell history and authorization keys are stored in `fillin` history, we'll not be bothered by the quadratic number of the command history.
 
