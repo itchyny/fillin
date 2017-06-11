@@ -6,7 +6,7 @@ A command line tool to improve your cli life.
 We rely on shell history in our terminal operation.
 We search from our shell history and execute commands dozens times in a day.
 
-However, shell history sometimes contains some authorization token that we don't care while searching the commands.
+However, shell history sometimes contains authorization tokens that we don't care while searching the commands.
 Some incremental fuzzy searchers have troubles when there are many random tokens in the shell history.
 Yeah, I know that I should not type a authorization token directly in the command line, but it's much easier than creating some shell script snippets.
 
@@ -18,7 +18,8 @@ The main idea is that splitting the command history and the template variable hi
 With this `fillin` command line tool, you can
 
 - make your commands reusable and it will make incremental shell history searching easy.
-- fill in template variables interactively and their history will be stored locally.
+- fill in the template variables interactively and their history will be stored locally.
+- easily switch between the local, staging and production servers.
 
 ## Installation
 ### Homebrew
@@ -82,19 +83,20 @@ The scope grouping behaviour is useful with some authorization keys.
 ```
 The `base-url` and `api-key` are stored as tuples so you can easily switch local, staging and production environment authorization.
 Without the grouping behaviour, variable history searching will lead you to an unmatched pair of `base-url` and `api-key`.
+Since the curl endpoint are stored in the shell history and authorization keys are stored in `fillin` history, we'll not be bothered by the quadratic number of the command history.
 
 In order to have the benefit of this grouping behaviour, it's strongly recommended to prepend the scope name.
 The `psql:` prefix on connecting to PostgreSQL database server, `redis:` prefix for Redis server are useful best practice in my opinion.
 
-## Problem with pipe and redirect
-The terminal interface of `fillin` is currently have problem with pipe and redirect.
-For example, the following command will get stuck the terminal interface.
+## Problem with pipe and redirection
+The terminal interface of `fillin` has problem with pipe and redirection.
+For example, the following command gets stuck the terminal interface.
 ```sh
  $ fillin echo {{message}} | jq .
-^M^M^C
+{}^M^M^C
 ```
 This is because the interface of `fillin` is rely on the standard output.
-Instead of connecting the output of `fillin` to another command, pass the pipe character as an argument.
+Instead of connecting the standard output of `fillin` to another command, pass the pipe character as an argument.
 ```sh
  $ fillin echo {{message}} \| jq .
 message: {}
@@ -104,7 +106,7 @@ message: {}
 message: {}
 {}
 ```
-Same problem occurs with redirect so please escape `>`.
+The same problem occurs with redirection so please escape `>`.
 ```sh
  $ fillin echo {{message}} \> /tmp/message
  $ # or
