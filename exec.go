@@ -58,8 +58,8 @@ USAGE:
 
 EXAMPLES:
    $NAME echo {{message}}
-   $NAME curl -u {{api:auth}} {{api:host}}/api/example
    $NAME psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
+   $NAME curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
 
 VERSION:
    %s

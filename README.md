@@ -78,11 +78,11 @@ You can input individual values to create a new pair after skipping the multi in
 
 The scope grouping behaviour is useful with some authorization keys.
 ```sh
- $ fillin curl {{example-api:base-url}}/api/example -H 'Api-Key: {{example-api:api-key}}'
-[example-api] base-url, api-key: example.com, apikeyabcde012345
+ $ fillin curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
+[example-api] base-url, access-token: example.com, accesstokenabcde012345
 ```
-The `base-url` and `api-key` are stored as tuples so you can easily switch local, staging and production environment authorization.
-Without the grouping behaviour, variable history searching will lead you to an unmatched pair of `base-url` and `api-key`.
+The `base-url` and `access-token` are stored as tuples so you can easily switch local, staging and production environment authorization.
+Without the grouping behaviour, variable history searching will lead you to an unmatched pair of `base-url` and `access-token`.
 Since the curl endpoint are stored in the shell history and authorization keys are stored in `fillin` history, we'll not be bothered by the quadratic number of the command history.
 
 In order to have the benefit of this grouping behaviour, it's strongly recommended to prepend the scope name.
