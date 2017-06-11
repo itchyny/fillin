@@ -59,23 +59,23 @@ When you connect to PostgreSQL server, you can use:
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 [psql] hostname: example.com
-[psql] dbname: example-db
 [psql] username: example-user
+[psql] dbname: example-db
 ```
 What's the benefit of `psql:` prefix?
 You'll notice the answer when you execute the command again:
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
-[psql] hostname, dbname, username: example.com, example-db, example-user   # you can select the most recently used entry with the upwards key
+[psql] hostname, username, dbname: example.com, example-user, example-db   # you can select the most recently used entry with the upwards key
 ```
 The identifiers with the same scope name (`psql` scope here) can be selected as pairs.
 You can input individual values to create a new pair after skipping the multi input prompt.
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
-[psql] hostname, dbname, username:             # just type enter to input values for each identifiers
+[psql] hostname, username, dbname:             # just type enter to input values for each identifiers
 [psql] hostname: example.org
-[psql] dbname: example-org-db
 [psql] username: example-org-user
+[psql] dbname: example-org-db
 ```
 
 The scope grouping behaviour is useful with some authorization keys.
