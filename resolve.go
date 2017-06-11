@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -48,8 +47,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 				continue
 			}
 			setHistory(history)
-			prompt := fmt.Sprintf("[%s] %s: ", id.scope, strings.Join(idg.keys, ", "))
-			text, err := line.Prompt(prompt)
+			text, err := line.Prompt(idg.prompt())
 			checkErr(err)
 			xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
 			if len(xs) == len(idg.keys) {
@@ -64,18 +62,14 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		if found(values, id) {
 			continue
 		}
-		prompt := fmt.Sprintf("%s: ", id.key)
-		if id.scope != "" {
-			prompt = fmt.Sprintf("[%s] %s: ", id.scope, id.key)
-		}
 		var text string
 		var err error
 		if in == nil {
 			setHistory(config.collectHistory(id))
-			text, err = line.Prompt(prompt)
+			text, err = line.Prompt(id.prompt())
 			checkErr(err)
 		} else {
-			out.WriteString(prompt)
+			out.WriteString(id.prompt())
 			out.Flush()
 			text, err = in.ReadString('\n')
 			if err != nil {
