@@ -22,10 +22,10 @@ func init() {
 func Exec() error {
 	if len(os.Args) >= 2 {
 		switch os.Args[1] {
-		case "-v", "-version", "--version":
+		case "-v", "version", "-version", "--version":
 			printVersion()
 			return nil
-		case "-h", "-help", "--help":
+		case "-h", "help", "-help", "--help":
 			printHelp()
 			return nil
 		}
