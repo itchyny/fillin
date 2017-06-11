@@ -55,13 +55,15 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 	if err := os.Rename(tmp, path); err != nil {
 		return "", err
 	}
-	histfile := filepath.Join(filepath.Dir(path), ".fillin.histfile")
-	hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	defer hfile.Close()
-	if err != nil {
-		return "", err
+	if cmd != "" {
+		histfile := filepath.Join(filepath.Dir(path), ".fillin.histfile")
+		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+		defer hfile.Close()
+		if err != nil {
+			return "", err
+		}
+		hfile.WriteString(fmt.Sprintf(": %d:0;%s\n", time.Now().Unix(), cmd))
 	}
-	hfile.WriteString(fmt.Sprintf(": %d:0;%s\n", time.Now().Unix(), cmd))
 	return cmd, nil
 }
 
