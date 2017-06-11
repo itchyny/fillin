@@ -59,7 +59,7 @@ USAGE:
 EXAMPLES:
    $NAME echo {{message}}
    $NAME curl -u {{api:auth}} {{api:host}}/api/example
-   $NAME psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
+   $NAME psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 
 VERSION:
    %s

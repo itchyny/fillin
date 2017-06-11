@@ -11,7 +11,7 @@ Some incremental fuzzy searchers have troubles when there are many random tokens
 Yeah, I know that I should not type a authorization token directly in the command line, but it's much easier than creating some shell script snippets.
 
 Another hint to implement `fillin` is that programmers execute same commands switching servers.
-We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{hostname}} {{dbname}} -U {{username}}` and to Redis server with `redis-cli -h {{hostname}} -p {{port}}`.
+We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{hostname}} -U {{username}} -d {{dbname}}` and to Redis server with `redis-cli -h {{hostname}} -p {{port}}`.
 We switch the host argument from the localhost (you may omit this), staging and production servers.
 
 The main idea is that splitting the command history and the template variable history.
@@ -55,7 +55,7 @@ One of the important features of `fillin` is scope grouping.
 Let's look into more practical example.
 When you connect to PostgreSQL server, you can use:
 ```sh
- $ fillin psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
+ $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 [psql] hostname: example.com
 [psql] dbname: example-db
 [psql] username: example-user
@@ -63,13 +63,13 @@ When you connect to PostgreSQL server, you can use:
 What's the benefit of `psql:` prefix?
 You'll notice the answer when you execute the command again:
 ```sh
- $ fillin psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
+ $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 [psql] hostname, dbname, username: example.com, example-db, example-user   # you can select the most recently used entry with the upwards key
 ```
 The identifiers with the same scope name (`psql` scope here) can be selected as pairs.
 You can input individual values to create a new pair after skipping the multi input prompt.
 ```sh
- $ fillin psql -h {{psql:hostname}} {{psql:dbname}} -U {{psql:username}}
+ $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 [psql] hostname, dbname, username:             # just type enter to input values for each identifiers
 [psql] hostname: example.org
 [psql] dbname: example-org-db
