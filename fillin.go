@@ -32,7 +32,9 @@ func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader, out *bufi
 		config.Scopes = make(map[string]*Scope)
 	}
 	values := Resolve(collectIdentifiers(args), config, in, out)
-	insertValues(config.Scopes, values)
+	if !empty(values) {
+		insertValues(config.Scopes, values)
+	}
 	if err := WriteConfig(w, config); err != nil {
 		log.Fatal(err)
 	}
