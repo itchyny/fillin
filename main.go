@@ -5,7 +5,7 @@ import (
 )
 
 var name = "fillin"
-var version = "v0.0.1"
+var version = "v0.0.2"
 var description = "fill-in your command line"
 var author = "itchyny"
 
