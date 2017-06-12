@@ -90,6 +90,13 @@ world?
 `,
 		expected: `echo \\\'\"\$\{\[]}\|\&\;\<\>\(\)\*\?\! '\tfoo bar baz'`,
 	},
+	{
+		args: []string{"echo $(cat {{foo}} {{bar}})"},
+		in: `sample1.txt
+sample2.txt
+`,
+		expected: `echo $(cat sample1.txt sample2.txt)`,
+	},
 }
 
 func TestRun(t *testing.T) {
