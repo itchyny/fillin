@@ -6,7 +6,7 @@ import (
 
 var name = "fillin"
 var version = "v0.0.3"
-var description = "fill-in your command line"
+var description = "fill-in your command and execute"
 var author = "itchyny"
 
 func main() {

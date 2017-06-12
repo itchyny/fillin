@@ -1,6 +1,6 @@
 # fillin [![Travis Build Status](https://travis-ci.org/itchyny/fillin.svg?branch=master)](https://travis-ci.org/itchyny/fillin)
-### fill-in your command line
-A command line tool to improve your cli life.
+### fill-in your command and execute
+#### ― _separate action and environment of your command!_ ―
 
 ## Motivation
 We rely on shell history in our terminal operation.
@@ -21,7 +21,7 @@ Other typical names of options are `--region`, `--conf` and `--account`.
 When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions.
 The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} ec2 describe-instances` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
 
-The core concept of `fillin` lies in splitting the action (do what) in the command and the environment (to where).
+The core concept of `fillin` lies in separating the action (do what) in the command and the environment (to where).
 With this `fillin` command line tool, you can
 
 - make your commands reusable and it will make incremental shell history searching easy.
