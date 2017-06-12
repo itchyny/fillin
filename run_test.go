@@ -45,8 +45,29 @@ world!
 		args: []string{"echo", "{{foo:bar}},", "{{ foo : bar }},", "{{foo:baz}}"},
 		in: `Hello
 example world!
+
 `,
 		expected: `echo Hello, Hello, 'example world!'`,
+	},
+	{
+		args: []string{"echo", "{{foo:bar}}", "{{ foo : baz }}", "{{foo:baz}}"},
+		in: `Hello, world!
+`,
+		expected: `echo Hello world\! world\!`,
+	},
+	{
+		args: []string{"echo", "{{foo:bar}}", "{{foo:bar}}", "{{foo:baz}}"},
+		in: `Hello,\ world!, test,\ for,\ comma!
+`,
+		expected: `echo 'Hello, world!' 'Hello, world!' 'test, for, comma!'`,
+	},
+	{
+		args: []string{"echo", "{{foo:bar}}", "{{foo:bar}}", "{{foo:baz}}"},
+		in: `Hello, world, oops!
+Hello,
+world?
+`,
+		expected: `echo Hello, Hello, world\?`,
 	},
 	{
 		args: []string{"echo", "{{foo}},", "{{bar}}", "{{baz}}"},
