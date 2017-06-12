@@ -68,6 +68,9 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 }
 
 func escapeJoin(args []string) string {
+	if len(args) == 1 {
+		return args[0]
+	}
 	for i, arg := range args {
 		args[i] = escape(arg)
 	}
