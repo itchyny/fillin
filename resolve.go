@@ -32,28 +32,37 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 	values := make(map[string]map[string]string)
 
 	scopeAsked := make(map[string]bool)
-	if in == nil {
-		for _, id := range identifiers {
-			if found(values, id) || id.scope == "" || scopeAsked[id.scope] {
-				continue
-			}
-			scopeAsked[id.scope] = true
-			idg := collect(identifiers, id.scope)
-			if len(idg.keys) == 0 {
-				continue
-			}
-			history := config.collectScopedPairHistory(idg)
-			if len(history) == 0 {
-				continue
-			}
+	for _, id := range identifiers {
+		if found(values, id) || id.scope == "" || scopeAsked[id.scope] {
+			continue
+		}
+		scopeAsked[id.scope] = true
+		idg := collect(identifiers, id.scope)
+		if len(idg.keys) == 0 {
+			continue
+		}
+		var text string
+		var err error
+		history := config.collectScopedPairHistory(idg)
+		if len(history) == 0 {
+			continue
+		}
+		if in == nil {
 			setHistory(history)
-			text, err := line.Prompt(idg.prompt())
+			text, err = line.Prompt(idg.prompt())
 			checkErr(err)
-			xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
-			if len(xs) == len(idg.keys) {
-				for i, key := range idg.keys {
-					insert(values, &Identifier{scope: id.scope, key: key}, strings.Replace(xs[i], ",\\ ", ", ", -1))
-				}
+		} else {
+			out.WriteString(idg.prompt())
+			out.Flush()
+			text, err = in.ReadString('\n')
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
+		if len(xs) == len(idg.keys) {
+			for i, key := range idg.keys {
+				insert(values, &Identifier{scope: id.scope, key: key}, strings.Replace(xs[i], ",\\ ", ", ", -1))
 			}
 		}
 	}
