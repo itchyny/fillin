@@ -17,6 +17,7 @@ deps:
 	go get -d -v .
 
 test: testdeps build
+	rm -rf .test
 	go test -v ./...
 
 testdeps:
