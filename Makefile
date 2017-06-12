@@ -8,7 +8,7 @@ build: deps
 install: deps
 	go install
 
-cross: deps
+cross: deps clean-test-tmp
 	goxc -max-processors=8 -build-ldflags="" \
 		-os="linux darwin freebsd netbsd windows" -arch="386 amd64 arm" -d . \
 		-resources-include='README*' -n $(BIN)
@@ -16,8 +16,7 @@ cross: deps
 deps:
 	go get -d -v .
 
-test: testdeps build
-	rm -rf .test
+test: testdeps build clean-test-tmp
 	go test -v ./...
 
 testdeps:
@@ -31,8 +30,11 @@ lintdeps:
 	go get -d -v -t .
 	go get -u github.com/golang/lint/golint
 
-clean:
-	rm -rf build .test snapshot debian
+clean: clean-test-tmp
+	rm -rf build  snapshot debian
 	go clean
 
-.PHONY: build install cross deps test testdeps lint lintdeps clean
+clean-test-tmp:
+	rm -rf .test
+
+.PHONY: build install cross deps test clean-test-tmp testdeps lint lintdeps clean
