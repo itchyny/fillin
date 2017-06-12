@@ -21,12 +21,12 @@ Other typical names of options are `--region`, `--conf` and `--account`.
 When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions.
 The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} ec2 describe-instances` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
 
-The core concept of `fillin` is that it'll make easy to search through the shell history by splitting the command history and the template variable history.
+The core concept of `fillin` lies in splitting the action (do what) in the command and the environment (to where).
 With this `fillin` command line tool, you can
 
 - make your commands reusable and it will make incremental shell history searching easy.
 - fill in the template variables interactively and their history will be stored locally.
-- easily switch between multiple environment (local, staging and production servers or some accounts on cloud services).
+- invoke the same action switching multiple environment (local, staging and production servers, configuration path, cloud service accounts or whatever)
 
 ## Installation
 ### Homebrew
@@ -49,21 +49,21 @@ So the hello world for the `fillin` command is as follows.
 ```sh
  $ fillin echo {{message}}
 message: Hello, world!        # you type here
-Hello, world!                 # fillin executes: echo Hello, world!
+Hello, world!                 # fillin executes: echo 'Hello, world!'
 ```
 The value of `message` variable is stored locally.
-You can use the recently used value with the upwards key (this may be replaced with more rich interface in the future but I'm not sure).
+You can use the recently used value with the upwards key.
 
-The `{{message}}` is called as a template part of the command.
+The `{{message}}` is a template part of the command.
 As the identifier, you can use alphabets, numbers, underscore and hyphen.
 Thus `{{sample-id}}`, `{{SAMPLE_ID}}`, `{{X01}}` and `{{FOO_example-identifier0123}}` are all valid template parts.
 
-One of the important features of `fillin` is scope grouping.
+One of the important features of `fillin` is variable scope grouping.
 Let's look into more practical example.
 When you connect to PostgreSQL server, you can use:
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
-[psql] hostname: example.com
+[psql] hostname: localhost
 [psql] username: example-user
 [psql] dbname: example-db
 ```
@@ -71,7 +71,7 @@ What's the benefit of `psql:` prefix?
 You'll notice the answer when you execute the command again:
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
-[psql] hostname, username, dbname: example.com, example-user, example-db   # you can select the most recently used entry with the upwards key
+[psql] hostname, username, dbname: localhost, example-user, example-db   # you can select the most recently used entry with the upwards key
 ```
 The identifiers with the same scope name (`psql` scope here) can be selected as pairs.
 You can input individual values to create a new pair after skipping the multi input prompt.
