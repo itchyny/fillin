@@ -62,7 +62,7 @@ example world!
 		expected: `echo 'Hello, world!' 'Hello, world!' 'test, for, comma!'`,
 	},
 	{
-		args: []string{"echo", "{{foo:bar}}", "{{foo:bar}}", "{{foo:baz}}"},
+		args: []string{"echo", "[[foo:bar]]", "[[foo:bar]]", "[[foo:baz]]"},
 		in: `Hello, world, oops!
 Hello,
 world?
@@ -70,7 +70,7 @@ world?
 		expected: `echo Hello, Hello, world\?`,
 	},
 	{
-		args: []string{"echo", "{{foo}},", "{{bar}}", "{{baz}}"},
+		args: []string{"echo", "{{foo}},", "[[bar]]", "{{baz}}"},
 		in: `こんにちは
 世界
 +。:.ﾟ٩(๑>◡<๑)۶:.｡+ﾟ
