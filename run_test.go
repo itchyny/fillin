@@ -26,7 +26,7 @@ world test!
 		expected: `echo 'Hello test,' 'world test!'`,
 	},
 	{
-		args: []string{"echo", "{{ foo-bar_baz }}", "{{ FOO-9 : BAR_2 }}", "{{ X }}"},
+		args: []string{"echo", "{{foo-bar_baz}}", "{{FOO-9:BAR_2}}", "{{X}}"},
 		in: `Foo bar
 FOO BAR
 X
@@ -42,7 +42,7 @@ world!
 		expected: `echo Hello, wonderful, Hello-wonderful-world\!`,
 	},
 	{
-		args: []string{"echo", "{{foo:bar}},", "{{ foo : bar }},", "{{foo:baz}}"},
+		args: []string{"echo", "{{foo:bar}},", "{{foo:bar}},", "{{foo:baz}}"},
 		in: `Hello
 example world!
 
@@ -50,7 +50,7 @@ example world!
 		expected: `echo Hello, Hello, 'example world!'`,
 	},
 	{
-		args: []string{"echo", "{{foo:bar}}", "{{ foo : baz }}", "{{foo:baz}}"},
+		args: []string{"echo", "{{foo:bar}}", "{{foo:baz}}", "{{foo:baz}}"},
 		in: `Hello, world!
 `,
 		expected: `echo Hello world\! world\!`,

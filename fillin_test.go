@@ -18,15 +18,7 @@ var collectIdentifiersTests = []struct {
 		},
 	},
 	{
-		args: []string{"{{ foo }}", "{{\tbar\t}}", "{{   baz  \t \t }}"},
-		ids: []*Identifier{
-			&Identifier{key: "foo"},
-			&Identifier{key: "bar"},
-			&Identifier{key: "baz"},
-		},
-	},
-	{
-		args: []string{"{{foo:bar}}", "{{  foo : baz  }}", "{{foo}}"},
+		args: []string{"{{foo:bar}}", "{{foo:baz}}", "{{foo}}"},
 		ids: []*Identifier{
 			&Identifier{scope: "foo", key: "bar"},
 			&Identifier{scope: "foo", key: "baz"},
