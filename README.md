@@ -53,8 +53,9 @@ Hello, world!                 # fillin executes: echo 'Hello, world!'
 ```
 The value of `message` variable is stored locally.
 You can use the recently used value with the upwards key.
+Note that in fish shell you can use square brackets like `fillin echo [[message]]`.
 
-The `{{message}}` is a template part of the command.
+The `{{message}}` (or `[[message]]` in fish shell) is a template part of the command.
 As the identifier, you can use alphabets, numbers, underscore and hyphen.
 Thus `{{sample-id}}`, `{{SAMPLE_ID}}`, `{{X01}}` and `{{FOO_example-identifier0123}}` are all valid template parts.
 
