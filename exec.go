@@ -57,7 +57,8 @@ USAGE:
    $NAME command...
 
 EXAMPLES:
-   $NAME echo {{message}}
+   $NAME echo {{message}} # in bash/zsh shell
+   $NAME echo [[message]] # in fish shell
    $NAME psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
    $NAME curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
 
