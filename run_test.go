@@ -4,14 +4,16 @@ import (
 	"bufio"
 	"bytes"
 	"reflect"
+	"runtime"
 	"sync"
 	"testing"
 )
 
 var runTests = []struct {
-	args     []string
-	in       string
-	expected string
+	args        []string
+	in          string
+	expected    string
+	skipWindows bool
 }{
 	{
 		args:     []string{"echo", "Hello,", "world!"},
@@ -31,7 +33,8 @@ world test!
 FOO BAR
 X
 `,
-		expected: `echo 'Foo bar' 'FOO BAR' X`,
+		expected:    `echo 'Foo bar' 'FOO BAR' X`,
+		skipWindows: true,
 	},
 	{
 		args: []string{"echo", "{{foo}},", "{{bar}},", "{{foo}}-{{bar}}-{{baz}}"},
@@ -47,7 +50,8 @@ world!
 example world!
 
 `,
-		expected: `echo Hello, Hello, 'example world!'`,
+		expected:    `echo Hello, Hello, 'example world!'`,
+		skipWindows: true,
 	},
 	{
 		args: []string{"echo", "{{foo:bar}}", "{{foo:baz}}", "{{foo:baz}}"},
@@ -102,6 +106,10 @@ sample2.txt
 func TestRun(t *testing.T) {
 	path := "./.test/run.json"
 	for _, test := range runTests {
+		if test.skipWindows {
+			t.Logf("skip test on Windows: %q", test.in)
+			continue
+		}
 		in := bufio.NewReader(bytes.NewBufferString(test.in))
 		out := bufio.NewWriter(new(bytes.Buffer))
 		cmd, err := Run(path, test.args, in, out)
@@ -115,6 +123,9 @@ func TestRun(t *testing.T) {
 }
 
 func TestRun_concurrently(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("skip test on Windows")
+	}
 	path := "./.test/concurrently.json"
 	test := runTests[1]
 	var wg sync.WaitGroup
