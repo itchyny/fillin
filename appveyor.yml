@@ -1,0 +1,20 @@
+version: "{build}"
+
+clone_folder: c:\gopath\src\github.com\itchyny\fillin
+
+environment:
+  GOPATH: c:\gopath
+
+install:
+  - go version
+  - go env
+  - go get -d -v -t .
+
+build_script:
+  - go build
+
+test_script:
+  - rm -rf .test
+  - go test -v ./...
+
+deploy: false
