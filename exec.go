@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
-	"syscall"
 )
 
 var cmdBase = []string{"sh", "-c"}
@@ -39,7 +38,7 @@ func Exec() error {
 	if err != nil {
 		return err
 	}
-	if err := syscall.Exec(sh, append(cmdBase, cmd), os.Environ()); err != nil {
+	if err := syscallExec(sh, append(cmdBase, cmd), os.Environ()); err != nil {
 		return err
 	}
 	return nil
