@@ -10,10 +10,9 @@ import (
 )
 
 var runTests = []struct {
-	args        []string
-	in          string
-	expected    string
-	skipWindows bool
+	args     []string
+	in       string
+	expected string
 }{
 	{
 		args:     []string{"echo", "Hello,", "world!"},
@@ -33,8 +32,7 @@ world test!
 FOO BAR
 X
 `,
-		expected:    `echo 'Foo bar' 'FOO BAR' X`,
-		skipWindows: true,
+		expected: `echo 'Foo bar' 'FOO BAR' X`,
 	},
 	{
 		args: []string{"echo", "{{foo}},", "{{bar}},", "{{foo}}-{{bar}}-{{baz}}"},
@@ -50,8 +48,7 @@ world!
 example world!
 
 `,
-		expected:    `echo Hello, Hello, 'example world!'`,
-		skipWindows: true,
+		expected: `echo Hello, Hello, 'example world!'`,
 	},
 	{
 		args: []string{"echo", "{{foo:bar}}", "{{foo:baz}}", "{{foo:baz}}"},
@@ -106,10 +103,6 @@ sample2.txt
 func TestRun(t *testing.T) {
 	path := "./.test/run.json"
 	for _, test := range runTests {
-		if test.skipWindows {
-			t.Logf("skip test on Windows: %q", test.in)
-			continue
-		}
 		in := bufio.NewReader(bytes.NewBufferString(test.in))
 		out := bufio.NewWriter(new(bytes.Buffer))
 		cmd, err := Run(path, test.args, in, out)
