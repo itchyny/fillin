@@ -6,23 +6,24 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 // Run fillin
 func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
-	usr, err := user.Current()
+	homedir, err := homedir.Dir()
 	if err != nil {
 		return "", err
 	}
 
 	path := filepath.Join(strings.Split(configPath, "/")...)
 	if path[0] == '~' {
-		path = usr.HomeDir + path[1:]
+		path = homedir + path[1:]
 	}
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return "", err
