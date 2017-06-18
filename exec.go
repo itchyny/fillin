@@ -33,8 +33,8 @@ func Exec() error {
 	if err != nil {
 		return err
 	}
-	configPath := "~/.config/fillin/fillin.json"
-	cmd, err := Run(configPath, os.Args[1:], nil, bufio.NewWriter(os.Stdout))
+	configDir := "~/.config/fillin"
+	cmd, err := Run(configDir, os.Args[1:], nil, bufio.NewWriter(os.Stdout))
 	if err != nil {
 		return err
 	}

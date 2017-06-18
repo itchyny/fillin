@@ -101,11 +101,10 @@ sample2.txt
 }
 
 func TestRun(t *testing.T) {
-	path := "./.test/run.json"
 	for _, test := range runTests {
 		in := bufio.NewReader(bytes.NewBufferString(test.in))
 		out := bufio.NewWriter(new(bytes.Buffer))
-		cmd, err := Run(path, test.args, in, out)
+		cmd, err := Run("./.test/run", test.args, in, out)
 		if err != nil {
 			t.Errorf("error occurred unexpectedly: %+v", err)
 		}
@@ -119,7 +118,6 @@ func TestRun_concurrently(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("skip test on Windows")
 	}
-	path := "./.test/concurrently.json"
 	test := runTests[1]
 	var wg sync.WaitGroup
 	for i := 0; i < 20; i++ {
@@ -128,7 +126,7 @@ func TestRun_concurrently(t *testing.T) {
 			defer wg.Done()
 			in := bufio.NewReader(bytes.NewBufferString(test.in))
 			out := bufio.NewWriter(new(bytes.Buffer))
-			cmd, err := Run(path, test.args, in, out)
+			cmd, err := Run("./.test/concurrently", test.args, in, out)
 			if err != nil {
 				t.Errorf("error occurred unexpectedly: %+v", err)
 			}

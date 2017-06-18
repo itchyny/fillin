@@ -15,12 +15,13 @@ import (
 )
 
 // Run fillin
-func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
-	path, err := homedir.Expand(filepath.Join(strings.Split(configPath, "/")...))
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
+	dir, err := homedir.Expand(filepath.Join(strings.Split(configDir, "/")...))
+	if err := os.MkdirAll(dir, 0755); err != nil {
 		return "", err
 	}
 
+	path := filepath.Join(dir, "fillin.json")
 	rfile, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return "", err
@@ -33,8 +34,7 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 	cmd := escapeJoin(filled)
 	rfile.Close() // not be defered due to rename
 
-	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
-	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
+	tmp := filepath.Join(dir, fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int()))
 	defer os.Remove(tmp)
 	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
@@ -51,7 +51,7 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 	}
 
 	if cmd != "" {
-		histfile := filepath.Join(filepath.Dir(path), ".fillin.histfile")
+		histfile := filepath.Join(dir, ".fillin.histfile")
 		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 		defer hfile.Close()
 		if err != nil {
