@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
 	"math/rand"
 	"os"
 	"os/user"
@@ -14,32 +13,33 @@ import (
 	"unicode/utf8"
 )
 
-var homedir string
-
-func init() {
-	usr, err := user.Current()
-	if err != nil {
-		log.Fatal(err)
-	}
-	homedir = usr.HomeDir
-}
-
 // Run fillin
 func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+
 	path := filepath.Join(strings.Split(configPath, "/")...)
 	if path[0] == '~' {
-		path = homedir + path[1:]
+		path = usr.HomeDir + path[1:]
 	}
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return "", err
 	}
+
 	rfile, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return "", err
 	}
 	w := new(bytes.Buffer)
-	cmd := escapeJoin(Fillin(args, rfile, w, in, out))
+	filled, err := Fillin(args, rfile, w, in, out)
+	if err != nil {
+		return "", err
+	}
+	cmd := escapeJoin(filled)
 	rfile.Close() // not be defered due to rename
+
 	tmpFileName := fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int())
 	tmp := filepath.Join(filepath.Dir(path), tmpFileName)
 	defer os.Remove(tmp)
@@ -52,9 +52,11 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 		return "", err
 	}
 	wfile.Close() // not be defered due to rename
+
 	if err := os.Rename(tmp, path); err != nil {
 		return "", err
 	}
+
 	if cmd != "" {
 		histfile := filepath.Join(filepath.Dir(path), ".fillin.histfile")
 		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
@@ -64,6 +66,7 @@ func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) 
 		}
 		hfile.WriteString(fmt.Sprintf(": %d:0;%s\n", time.Now().Unix(), cmd))
 	}
+
 	return cmd, nil
 }
 

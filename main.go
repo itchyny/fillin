@@ -1,7 +1,9 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"io"
+	"os"
 )
 
 var name = "fillin"
@@ -11,6 +13,9 @@ var author = "itchyny"
 
 func main() {
 	if err := Exec(); err != nil {
-		log.Fatal(err)
+		if err != io.EOF {
+			fmt.Fprintf(os.Stderr, "%s: %v\n", name, err)
+		}
+		os.Exit(1)
 	}
 }

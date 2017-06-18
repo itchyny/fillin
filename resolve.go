@@ -3,15 +3,13 @@ package main
 import (
 	"bufio"
 	"io"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/peterh/liner"
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *bufio.Writer) map[string]map[string]string {
+func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *bufio.Writer) (map[string]map[string]string, error) {
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
@@ -21,13 +19,11 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			line.AppendHistory(history[i])
 		}
 	}
-	checkErr := func(err error) {
-		if err != nil {
-			if err == liner.ErrPromptAborted || err == io.EOF {
-				os.Exit(1)
-			}
-			log.Fatal(err)
+	normalizeErr := func(err error) error {
+		if err == liner.ErrPromptAborted || err == io.EOF {
+			return io.EOF
 		}
+		return err
 	}
 	values := make(map[string]map[string]string)
 
@@ -50,13 +46,15 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		if in == nil {
 			setHistory(history)
 			text, err = line.Prompt(idg.prompt())
-			checkErr(err)
+			if err := normalizeErr(err); err != nil {
+				return nil, err
+			}
 		} else {
 			out.WriteString(idg.prompt())
 			out.Flush()
 			text, err = in.ReadString('\n')
 			if err != nil {
-				log.Fatal(err)
+				return nil, err
 			}
 		}
 		xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
@@ -76,17 +74,19 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		if in == nil {
 			setHistory(config.collectHistory(id))
 			text, err = line.Prompt(id.prompt())
-			checkErr(err)
+			if err := normalizeErr(err); err != nil {
+				return nil, err
+			}
 		} else {
 			out.WriteString(id.prompt())
 			out.Flush()
 			text, err = in.ReadString('\n')
 			if err != nil {
-				log.Fatal(err)
+				return nil, err
 			}
 		}
 		insert(values, id, strings.TrimSuffix(text, "\n"))
 	}
 
-	return values
+	return values, nil
 }

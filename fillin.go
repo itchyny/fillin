@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"io"
-	"log"
 	"regexp"
 	"strings"
 )
@@ -22,28 +21,31 @@ func collectIdentifiers(args []string) []*Identifier {
 }
 
 // Fillin fills in the command arguments
-func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader, out *bufio.Writer) []string {
+func Fillin(args []string, r io.Reader, w io.Writer, in *bufio.Reader, out *bufio.Writer) ([]string, error) {
 	ret := make([]string, len(args))
 	config, err := ReadConfig(r)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if config.Scopes == nil {
 		config.Scopes = make(map[string]*Scope)
 	}
-	values := Resolve(collectIdentifiers(args), config, in, out)
+	values, err := Resolve(collectIdentifiers(args), config, in, out)
+	if err != nil {
+		return nil, err
+	}
 	if !empty(values) {
 		insertValues(config.Scopes, values)
 	}
 	if err := WriteConfig(w, config); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	for i, arg := range args {
 		ret[i] = fillinPattern.ReplaceAllStringFunc(arg, func(match string) string {
 			return lookup(values, identifierFromMatch(match))
 		})
 	}
-	return ret
+	return ret, nil
 }
 
 func identifierFromMatch(match string) *Identifier {
