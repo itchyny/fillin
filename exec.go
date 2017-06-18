@@ -34,6 +34,9 @@ func Exec() error {
 		return err
 	}
 	configDir := "~/.config/fillin"
+	if dir := os.Getenv("FILLIN_CONFIG_DIR"); dir != "" {
+		configDir = dir
+	}
 	cmd, err := Run(configDir, os.Args[1:], nil, bufio.NewWriter(os.Stdout))
 	if err != nil {
 		return err
