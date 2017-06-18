@@ -16,15 +16,7 @@ import (
 
 // Run fillin
 func Run(configPath string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
-	homedir, err := homedir.Dir()
-	if err != nil {
-		return "", err
-	}
-
-	path := filepath.Join(strings.Split(configPath, "/")...)
-	if path[0] == '~' {
-		path = homedir + path[1:]
-	}
+	path, err := homedir.Expand(filepath.Join(strings.Split(configPath, "/")...))
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return "", err
 	}
