@@ -74,12 +74,12 @@ func Test_found(t *testing.T) {
 
 func Test_collect(t *testing.T) {
 	ids := []*Identifier{
-		&Identifier{scope: "foo", key: "foo"},
-		&Identifier{scope: "foo", key: "bar"},
-		&Identifier{scope: "zoo", key: "foo"},
-		&Identifier{scope: "foo", key: "foo"},
-		&Identifier{scope: "foo", key: "baz"},
-		&Identifier{scope: "qux", key: "bar"},
+		{scope: "foo", key: "foo"},
+		{scope: "foo", key: "bar"},
+		{scope: "zoo", key: "foo"},
+		{scope: "foo", key: "foo"},
+		{scope: "foo", key: "baz"},
+		{scope: "qux", key: "bar"},
 	}
 	expectedFoo := &IdentifierGroup{
 		scope: "foo",
@@ -134,13 +134,13 @@ func Test_empty(t *testing.T) {
 		},
 		{
 			values: map[string]map[string]string{
-				"foo": map[string]string{},
+				"foo": {},
 			},
 			expected: true,
 		},
 		{
 			values: map[string]map[string]string{
-				"foo": map[string]string{
+				"foo": {
 					"bar": "",
 					"baz": "",
 				},
@@ -149,11 +149,11 @@ func Test_empty(t *testing.T) {
 		},
 		{
 			values: map[string]map[string]string{
-				"foo": map[string]string{
+				"foo": {
 					"bar": "",
 					"baz": "",
 				},
-				"bar": map[string]string{
+				"bar": {
 					"qux": "quux",
 				},
 			},

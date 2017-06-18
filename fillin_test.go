@@ -12,33 +12,33 @@ var collectIdentifiersTests = []struct {
 	{
 		args: []string{"{{foo}}", "{{bar}}", "{{baz}}"},
 		ids: []*Identifier{
-			&Identifier{key: "foo"},
-			&Identifier{key: "bar"},
-			&Identifier{key: "baz"},
+			{key: "foo"},
+			{key: "bar"},
+			{key: "baz"},
 		},
 	},
 	{
 		args: []string{"{{foo:bar}}", "{{foo:baz}}", "{{foo}}"},
 		ids: []*Identifier{
-			&Identifier{scope: "foo", key: "bar"},
-			&Identifier{scope: "foo", key: "baz"},
-			&Identifier{scope: "", key: "foo"},
+			{scope: "foo", key: "bar"},
+			{scope: "foo", key: "baz"},
+			{scope: "", key: "foo"},
 		},
 	},
 	{
 		args: []string{"[[foo]]", "{{bar}}", "[[baz]]"},
 		ids: []*Identifier{
-			&Identifier{key: "foo"},
-			&Identifier{key: "bar"},
-			&Identifier{key: "baz"},
+			{key: "foo"},
+			{key: "bar"},
+			{key: "baz"},
 		},
 	},
 	{
 		args: []string{"[[foo:bar]]", "[[foo:baz]]", "{{foo}}"},
 		ids: []*Identifier{
-			&Identifier{scope: "foo", key: "bar"},
-			&Identifier{scope: "foo", key: "baz"},
-			&Identifier{scope: "", key: "foo"},
+			{scope: "foo", key: "bar"},
+			{scope: "foo", key: "baz"},
+			{scope: "", key: "foo"},
 		},
 	},
 }

@@ -22,7 +22,7 @@ var configTests = []struct {
 	{
 		config: Config{
 			Scopes: map[string]*Scope{
-				"": &Scope{},
+				"": {},
 			},
 		},
 		bytes: []byte(`{
@@ -37,7 +37,7 @@ var configTests = []struct {
 	{
 		config: Config{
 			Scopes: map[string]*Scope{
-				"": &Scope{
+				"": {
 					Values: []map[string]string{
 						{
 							"baz": "world!",
@@ -49,7 +49,7 @@ var configTests = []struct {
 						},
 					},
 				},
-				"sample": &Scope{
+				"sample": {
 					Values: []map[string]string{
 						{
 							"foo": "Test1, world!",
