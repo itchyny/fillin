@@ -16,7 +16,7 @@ import (
 
 // Run fillin
 func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
-	dir, err := homedir.Expand(filepath.Join(strings.Split(configDir, "/")...))
+	dir, err := homedir.Expand(normalizeFileSeparator(configDir))
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return "", err
 	}
@@ -61,6 +61,14 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 	}
 
 	return cmd, nil
+}
+
+func normalizeFileSeparator(path string) string {
+	p := filepath.Join(strings.Split(path, "/")...)
+	if path[0] == '/' {
+		p = "/" + p
+	}
+	return p
 }
 
 func escapeJoin(args []string) string {
