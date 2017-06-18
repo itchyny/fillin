@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"sort"
@@ -31,7 +32,7 @@ func ReadConfig(r io.Reader) (*Config, error) {
 	}
 	err = json.Unmarshal(bytes, &config)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("invalid JSON in config file: %v", err)
 	}
 	return &config, nil
 }
