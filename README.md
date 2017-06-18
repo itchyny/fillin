@@ -8,7 +8,7 @@ We search from our shell history and execute commands dozens times in a day.
 
 However, shell history sometimes contains authorization tokens that we don't care while searching the commands.
 Some incremental fuzzy searchers have troubles when there are many random tokens in the shell history.
-Yeah, I know that I should not type a authorization token directly in the command line, but it's much easier than creating some shell script snippets.
+Yeah, I know that I should not type authorization tokens directly in the command line, but it's much easier than creating some shell script snippets.
 
 Another hint to implement `fillin` is that programmers execute same commands switching servers.
 We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}` and to Redis server with `redis-cli -h {{redis:hostname}} -p {{redis:port}}`.
@@ -61,7 +61,7 @@ Thus `{{sample-id}}`, `{{SAMPLE_ID}}`, `{{X01}}` and `{{FOO_example-identifier01
 
 One of the important features of `fillin` is variable scope grouping.
 Let's look into more practical example.
-When you connect to PostgreSQL server, you can use:
+When you connect to a PostgreSQL server, you can use:
 ```sh
  $ fillin psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
 [psql] hostname: localhost
@@ -89,7 +89,7 @@ The scope grouping behaviour is useful with some authorization keys.
  $ fillin curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
 [example-api] base-url, access-token: example.com, accesstokenabcde012345
 ```
-The `base-url` and `access-token` are stored as tuples so you can easily switch between local, staging and production environment authorization.
+The `base-url` and `access-token` are stored in pairs so you can easily switch between local, staging and production environment authorization.
 Without the grouping behaviour, variable history searching will lead you to an unmatched pair of `base-url` and `access-token`.
 Since the curl endpoint are stored in the shell history and authorization keys are stored in `fillin` history, we'll not be bothered by the quadratic number of the command history.
 
