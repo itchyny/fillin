@@ -51,7 +51,7 @@ So the hello world for the `fillin` command is as follows.
 message: Hello, world!        # you type here
 Hello, world!                 # fillin executes: echo 'Hello, world!'
 ```
-The value of `message` variable is stored locally.
+The value of `message` variable is stored locally (in `~/.config/fillin/fillin.json`; you can configure the directory by `FILLIN_CONFIG_DIR`).
 You can use the recently used value with the upwards key.
 Note that in fish shell you can use square brackets like `fillin echo [[message]]`.
 
