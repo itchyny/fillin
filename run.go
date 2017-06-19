@@ -17,7 +17,10 @@ import (
 // Run fillin
 func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
 	dir, err := homedir.Expand(normalizeFileSeparator(configDir))
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		return "", err
+	}
+	if err := os.Chmod(dir, 0700); err != nil {
 		return "", err
 	}
 
