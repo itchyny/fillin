@@ -58,6 +58,7 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 			return "", err
 		}
 		hfile.WriteString(fmt.Sprintf(": %d:0;%s\n", time.Now().Unix(), cmd))
+		hfile.Chmod(0600)
 	}
 
 	return cmd, nil
