@@ -6,27 +6,23 @@
 We rely on shell history in our terminal operation.
 We search from our shell history and execute commands dozens times in a day.
 
-However, shell history sometimes contains authorization tokens that we don't care while searching the commands.
-Some incremental fuzzy searchers have troubles when there are many random tokens in the shell history.
-Yeah, I know that I should not type authorization tokens directly in the command line, but it's much easier than creating some shell script snippets.
-
-Another hint to implement `fillin` is that programmers execute same commands switching servers.
+Some programmers execute same commands switching servers.
 We do not just login with `ssh {{hostname}}`, we also connect to the database with `psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}` and to Redis server with `redis-cli -h {{redis:hostname}} -p {{redis:port}}`.
 We switch the host argument from the localhost (you may omit this), staging and production servers.
 
 Some command line tools allow us to login cloud services and retrieve data from our terminal.
-Most of such cli tools accept an option to switching between the account.
+Most of such cli tools accept an option to switching between our accounts.
 For example, AWS command line tool has `--profile` option.
 Other typical names of options are `--region`, `--conf` and `--account`.
 When we specify these options directly, there are quadratic number of commands; the number of accounts times the number of actions.
 The `fillin` allows us to save the command something like `aws --profile {{aws:profile}} ec2 describe-instances` so we'll not be bothered by the quadratic combinations of commands while searching through the shell history.
 
-The core concept of `fillin` lies in separating the action (do what) in the command and the environment (to where).
+The core concept of `fillin` lies in separating the action (do what) and the environment (to where) in the command.
 With this `fillin` command line tool, you can
 
 - make your commands reusable and it will make incremental shell history searching easy.
 - fill in the template variables interactively and their history will be stored locally.
-- invoke the same action switching multiple environment (local, staging and production servers, configuration path, cloud service accounts or whatever)
+- invoke the same action switching multiple environment (local, staging and production servers, configuration paths, cloud service accounts or whatever)
 
 ## Installation
 ### Homebrew
@@ -103,7 +99,7 @@ For example, the following command gets stuck the terminal interface.
  $ fillin echo {{message}} | jq .
 {}^M^M^C
 ```
-This is because the interface of `fillin` is rely on the standard output.
+This is because the interface of `fillin` relies on the standard output.
 Instead of connecting the standard output of `fillin` to another command, pass the pipe character as an argument.
 ```sh
  $ fillin echo {{message}} \| jq .
