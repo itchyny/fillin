@@ -22,7 +22,7 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 	}
 
 	path := filepath.Join(dir, "fillin.json")
-	rfile, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0644)
+	rfile, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return "", err
 	}
@@ -36,7 +36,7 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 
 	tmp := filepath.Join(dir, fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int()))
 	defer os.Remove(tmp)
-	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE, 0644)
+	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return "", err
 	}
@@ -52,7 +52,7 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 
 	if cmd != "" {
 		histfile := filepath.Join(dir, ".fillin.histfile")
-		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
 		defer hfile.Close()
 		if err != nil {
 			return "", err
