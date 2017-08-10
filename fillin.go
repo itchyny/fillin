@@ -58,7 +58,7 @@ func identifierFromMatch(match string) *Identifier {
 	} else {
 		key = strings.TrimSpace(match)
 	}
-	return &Identifier{scope, key}
+	return &Identifier{scope, key, defaultValue(key, scope)}
 }
 
 func insertValues(scopes map[string]*Scope, values map[string]map[string]string) {
