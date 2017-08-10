@@ -56,9 +56,8 @@ func defaultValue(key string, scope string) string {
 func defaultValueKey(key string, scope string) string {
 	if len(scope) > 0 {
 		return fmt.Sprintf("%s_%s", scope, key)
-	} else {
-		return key
 	}
+	return key
 }
 
 func found(values map[string]map[string]string, id *Identifier) bool {
