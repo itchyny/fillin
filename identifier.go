@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -9,11 +10,18 @@ import (
 type Identifier struct {
 	scope string
 	key   string
+	defaultValue string
 }
 
 func (id *Identifier) prompt() string {
 	if id.scope == "" {
+		if len(id.defaultValue) > 0 {
+			return fmt.Sprintf("%s(%s): ", id.key, id.defaultValue)
+		}
 		return fmt.Sprintf("%s: ", id.key)
+	}
+	if len(id.defaultValue) > 0 {
+		return fmt.Sprintf("[%s] %s(%s): ", id.scope, id.key, id.defaultValue)
 	}
 	return fmt.Sprintf("[%s] %s: ", id.scope, id.key)
 }
@@ -22,10 +30,35 @@ func (id *Identifier) prompt() string {
 type IdentifierGroup struct {
 	scope string
 	keys  []string
+	defaultValues []string
 }
 
 func (idg *IdentifierGroup) prompt() string {
-	return fmt.Sprintf("[%s] %s: ", idg.scope, strings.Join(idg.keys, ", "))
+	var messages []string
+	for index, key := range idg.keys {
+		var msg = key
+		if len(idg.defaultValues[index]) > 0 {
+			msg = msg + fmt.Sprintf("(%s)", idg.defaultValues[index])
+		}
+		messages = append(messages, msg)
+	}
+	return fmt.Sprintf("[%s] %s: ", idg.scope, strings.Join(messages, ", "))
+}
+
+func defaultValue(key string, scope string) string {
+	value, ok := os.LookupEnv(defaultValueKey(key, scope))
+	if ok && len(value) > 0 {
+		return value
+	}
+	return ""
+}
+
+func defaultValueKey(key string, scope string) string {
+	if len(scope) > 0 {
+		return fmt.Sprintf("%s_%s", scope, key)
+	} else {
+		return key
+	}
 }
 
 func found(values map[string]map[string]string, id *Identifier) bool {
@@ -38,15 +71,16 @@ func found(values map[string]map[string]string, id *Identifier) bool {
 }
 
 func collect(identifiers []*Identifier, scope string) *IdentifierGroup {
-	var keys []string
+	var keys, defaultValues []string
 	added := make(map[string]bool)
 	for _, id := range identifiers {
 		if scope == id.scope && !added[id.key] {
 			keys = append(keys, id.key)
+			defaultValues = append(defaultValues, defaultValue(id.key, scope))
 			added[id.key] = true
 		}
 	}
-	return &IdentifierGroup{scope: scope, keys: keys}
+	return &IdentifierGroup{scope: scope, keys: keys, defaultValues: defaultValues}
 }
 
 func insert(values map[string]map[string]string, id *Identifier, value string) {

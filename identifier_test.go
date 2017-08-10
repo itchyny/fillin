@@ -46,7 +46,7 @@ var identifierTests = []struct {
 }
 
 func Test_prompt(t *testing.T) {
-	id1 := &Identifier{key: "foo"}
+	id1 := &Identifier{key: "foo", defaultValue: ""}
 	got := id1.prompt()
 	if got != "foo: " {
 		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", id1, "foo: ", got)
@@ -56,7 +56,7 @@ func Test_prompt(t *testing.T) {
 	if got != "[foo] bar: " {
 		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", id2, "[foo] bar: ", got)
 	}
-	idg := &IdentifierGroup{scope: "foo", keys: []string{"bar", "baz", "qux"}}
+	idg := &IdentifierGroup{scope: "foo", keys: []string{"bar", "baz", "qux"}, defaultValues: []string{"", "", ""}}
 	got = idg.prompt()
 	if got != "[foo] bar, baz, qux: " {
 		t.Errorf("prompt is not correct for %+v (found: %+v, got: %+v)", idg, "[foo] bar, baz, qux: ", got)
@@ -84,6 +84,7 @@ func Test_collect(t *testing.T) {
 	expectedFoo := &IdentifierGroup{
 		scope: "foo",
 		keys:  []string{"foo", "bar", "baz"},
+		defaultValues: []string{"", "", ""},
 	}
 	expectedBar := &IdentifierGroup{
 		scope: "bar",

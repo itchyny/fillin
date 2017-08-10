@@ -60,7 +60,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 		xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
 		if len(xs) == len(idg.keys) {
 			for i, key := range idg.keys {
-				insert(values, &Identifier{scope: id.scope, key: key}, strings.Replace(xs[i], ",\\ ", ", ", -1))
+				insert(values, &Identifier{scope: id.scope, key: key, defaultValue: idg.defaultValues[i]}, strings.Replace(xs[i], ",\\ ", ", ", -1))
 			}
 		}
 	}
@@ -84,6 +84,9 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 			if err != nil {
 				return nil, err
 			}
+		}
+		if len(text) == 0 {
+			text = id.defaultValue
 		}
 		insert(values, id, strings.TrimSuffix(text, "\n"))
 	}
