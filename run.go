@@ -11,6 +11,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/itchyny/zshhist-go"
 	"github.com/mitchellh/go-homedir"
 )
 
@@ -60,7 +61,8 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 		if err != nil {
 			return "", err
 		}
-		hfile.WriteString(fmt.Sprintf(": %d:0;%s\n", time.Now().Unix(), cmd))
+		w := zshhist.NewWriter(hfile)
+		w.Write(zshhist.History{Time: int(time.Now().Unix()), Elapsed: 0, Command: cmd})
 		hfile.Chmod(0600)
 	}
 
