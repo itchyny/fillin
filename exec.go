@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strings"
 )
 
 var cmdBase = []string{"sh", "-c"}
@@ -52,22 +51,22 @@ func printVersion() {
 }
 
 func printHelp() {
-	fmt.Printf(strings.Replace(`NAME:
-   $NAME - %s
+	fmt.Printf(`NAME:
+   %[1]s - %[2]s
 
 USAGE:
-   $NAME command...
+   %[1]s command...
 
 EXAMPLES:
-   $NAME echo {{message}} # in bash/zsh shell
-   $NAME echo [[message]] # in fish shell
-   $NAME psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
-   $NAME curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
+   %[1]s echo {{message}} # in bash/zsh shell
+   %[1]s echo [[message]] # in fish shell
+   %[1]s psql -h {{psql:hostname}} -U {{psql:username}} -d {{psql:dbname}}
+   %[1]s curl {{example-api:base-url}}/api/1/example/info -H 'Authorization: Bearer {{example-api:access-token}}'
 
 VERSION:
-   %s
+   %[3]s
 
 AUTHOR:
-   %s
-`, "$NAME", name, -1), description, version, author)
+   %[4]s
+`, name, description, version, author)
 }
