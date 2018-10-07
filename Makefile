@@ -8,13 +8,14 @@ build: deps
 install: deps
 	go install
 
-cross: deps clean-test-tmp
-	goxc -max-processors=8 -build-ldflags="" \
-		-os="linux darwin freebsd netbsd windows" -arch="386 amd64 arm" -d . \
-		-resources-include='README*' -n $(BIN)
-
 deps:
 	go get -d -v .
+
+cross: crossdeps
+	goxz -os=linux,darwin,freebsd,netbsd,windows -arch=386,amd64 -n $(BIN) -d snapshot .
+
+crossdeps: deps
+	go get github.com/Songmu/goxz/cmd/goxz
 
 test: testdeps build clean-test-tmp
 	go test -v ./...
@@ -37,4 +38,4 @@ clean: clean-test-tmp
 clean-test-tmp:
 	rm -rf .test
 
-.PHONY: build install cross deps test clean-test-tmp testdeps lint lintdeps clean
+.PHONY: build install deps cross crossdeps test clean-test-tmp testdeps lint lintdeps clean
