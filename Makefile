@@ -29,7 +29,7 @@ lint: lintdeps build
 
 lintdeps:
 	go get -d -v -t .
-	go get -u github.com/golang/lint/golint
+	command -v golint >/dev/null || go get -u golang.org/x/lint/golint
 
 clean: clean-test-tmp
 	rm -rf build  snapshot debian
