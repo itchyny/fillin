@@ -40,7 +40,7 @@ func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (
 
 	tmp := filepath.Join(dir, fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int()))
 	defer os.Remove(tmp)
-	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE, 0600)
+	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	if err != nil {
 		return "", err
 	}
