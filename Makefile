@@ -1,4 +1,4 @@
-BIN = fillin
+BIN := fillin
 
 .PHONY: all
 all: clean build
