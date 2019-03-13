@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.11.x
+  - 1.12.x
 env: PATH=/home/travis/gopath/bin:$PATH
 script:
   - make test
