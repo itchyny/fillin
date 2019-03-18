@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"reflect"
 	"runtime"
+	"strings"
 	"sync"
 	"testing"
 )
@@ -102,7 +102,7 @@ sample2.txt
 
 func TestRun(t *testing.T) {
 	for _, test := range runTests {
-		in := bufio.NewReader(bytes.NewBufferString(test.in))
+		in := strings.NewReader(test.in)
 		out := new(bytes.Buffer)
 		cmd, err := Run("./.test/run", test.args, in, out)
 		if err != nil {
@@ -124,7 +124,7 @@ func TestRun_concurrently(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			in := bufio.NewReader(bytes.NewBufferString(test.in))
+			in := strings.NewReader(test.in)
 			out := new(bytes.Buffer)
 			cmd, err := Run("./.test/concurrently", test.args, in, out)
 			if err != nil {

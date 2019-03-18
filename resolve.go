@@ -9,7 +9,7 @@ import (
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io.Writer) (map[string]map[string]string, error) {
+func Resolve(identifiers []*Identifier, config *Config, in io.Reader, out io.Writer) (map[string]map[string]string, error) {
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
@@ -26,6 +26,10 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io
 		return err
 	}
 	values := make(map[string]map[string]string)
+	var bin *bufio.Reader
+	if in != nil {
+		bin = bufio.NewReader(in)
+	}
 
 	scopeAsked := make(map[string]bool)
 	for _, id := range identifiers {
@@ -43,7 +47,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io
 		if len(history) == 0 {
 			continue
 		}
-		if in == nil {
+		if bin == nil {
 			setHistory(history)
 			text, err = line.Prompt(idg.prompt())
 			if err := normalizeErr(err); err != nil {
@@ -51,7 +55,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io
 			}
 		} else {
 			out.Write([]byte(idg.prompt()))
-			text, err = in.ReadString('\n')
+			text, err = bin.ReadString('\n')
 			if err != nil {
 				return nil, err
 			}
@@ -70,7 +74,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io
 		}
 		var text string
 		var err error
-		if in == nil {
+		if bin == nil {
 			setHistory(config.collectHistory(id))
 			text, err = line.Prompt(id.prompt())
 			if err := normalizeErr(err); err != nil {
@@ -78,7 +82,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io
 			}
 		} else {
 			out.Write([]byte(id.prompt()))
-			text, err = in.ReadString('\n')
+			text, err = bin.ReadString('\n')
 			if err != nil {
 				return nil, err
 			}
