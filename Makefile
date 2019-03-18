@@ -19,7 +19,7 @@ deps:
 
 .PHONY: cross
 cross: crossdeps
-	goxz -os=linux,darwin,freebsd,netbsd,windows -arch=386,amd64 -n $(BIN) -d snapshot .
+	goxz -os=linux,darwin,freebsd,netbsd,windows -arch=386,amd64 -n $(BIN) .
 
 .PHONY: crossdeps
 crossdeps: deps
@@ -40,7 +40,7 @@ lintdeps:
 
 .PHONY: clean
 clean: clean-test-tmp
-	rm -rf build  snapshot debian
+	rm -rf build goxz
 	go clean
 
 .PHONY: clean-test-tmp

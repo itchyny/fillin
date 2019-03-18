@@ -11,20 +11,8 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: Nc5/ykgM6Yp2ZR1pPEnWAmuDN+U6uo9hx9tmsN5dEoZfEWE1U3qiPHUsOUdGZDxcSbAd/N+XOcKcv1tI903YazVX7ZfO2eoawDRV5xINUl9lno8qW2bVpPRKYAcu/VyOX59lJ7sInCjxxMMvI8Ocq2rJPzvI1lkLrRzTVMyKGKwLzXvK12gbYFYVFzwkZEtbMMORQEjGgwU41W7ktklImYvzO9NrmSQgkuTuHpdSpLiUeRutS0F/6FsgUpbgX83Ox4PRzz+5JGD8D1O0AsTI2qRhyfdtqQ084vhSmpwK1YJtbWV2nUiWZm9u/kyEjZhz+I1X/A8YqiIO9IwB6Ob4ceaWz5nsOedgZbt9NngTCFDwolO8UmqwKSsfmMjiNEVhdXTRaFby0YAn0ivPWP+BY5O3WbruKh0rVxU7XSRgFXqfx3+YCrCZ0SFWUuTAzoikiCYgirJuU9pcloz0DOYDKICEouYfErJ2Y6e+uM6sQTYwcwtLMJTxyjkb888GFsm0VoZrVPCJKhl96T1wMVZQkH8RWDBwPIEZGQTMEwQDbIjl+9+j2LfwyC64MyNthqUj6ghg9qui1YaRrc1H/06XnsMhR44CbgRsYlJW+hPt92YQprDYgJKwGOv97fVUOdZT7IO/oyavv9rJ84AEz3pxOlPEh5y3bQIB6hl3kHmOfNk=
-  file:
-    - snapshot/fillin_darwin_386.zip
-    - snapshot/fillin_darwin_amd64.zip
-    - snapshot/fillin_freebsd_386.zip
-    - snapshot/fillin_freebsd_amd64.zip
-    - snapshot/fillin_freebsd_arm.zip
-    - snapshot/fillin_linux_386.tar.gz
-    - snapshot/fillin_linux_amd64.tar.gz
-    - snapshot/fillin_linux_arm.tar.gz
-    - snapshot/fillin_netbsd_386.zip
-    - snapshot/fillin_netbsd_amd64.zip
-    - snapshot/fillin_netbsd_arm.zip
-    - snapshot/fillin_windows_386.zip
-    - snapshot/fillin_windows_amd64.zip
+  file: goxz/*
+  file_glob: true
   on:
     repo: itchyny/fillin
     tags: true
