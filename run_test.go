@@ -103,7 +103,7 @@ sample2.txt
 func TestRun(t *testing.T) {
 	for _, test := range runTests {
 		in := bufio.NewReader(bytes.NewBufferString(test.in))
-		out := bufio.NewWriter(new(bytes.Buffer))
+		out := new(bytes.Buffer)
 		cmd, err := Run("./.test/run", test.args, in, out)
 		if err != nil {
 			t.Errorf("error occurred unexpectedly: %+v", err)
@@ -125,7 +125,7 @@ func TestRun_concurrently(t *testing.T) {
 		go func() {
 			defer wg.Done()
 			in := bufio.NewReader(bytes.NewBufferString(test.in))
-			out := bufio.NewWriter(new(bytes.Buffer))
+			out := new(bytes.Buffer)
 			cmd, err := Run("./.test/concurrently", test.args, in, out)
 			if err != nil {
 				t.Errorf("error occurred unexpectedly: %+v", err)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -36,7 +35,7 @@ func Exec() error {
 	if dir := os.Getenv("FILLIN_CONFIG_DIR"); dir != "" {
 		configDir = dir
 	}
-	cmd, err := Run(configDir, os.Args[1:], nil, bufio.NewWriter(os.Stdout))
+	cmd, err := Run(configDir, os.Args[1:], nil, os.Stdout)
 	if err != nil {
 		return err
 	}

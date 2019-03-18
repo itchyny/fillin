@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -16,7 +17,7 @@ import (
 )
 
 // Run fillin
-func Run(configDir string, args []string, in *bufio.Reader, out *bufio.Writer) (string, error) {
+func Run(configDir string, args []string, in *bufio.Reader, out io.Writer) (string, error) {
 	dir, err := homedir.Expand(normalizeFileSeparator(configDir))
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", err

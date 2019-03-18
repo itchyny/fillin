@@ -9,7 +9,7 @@ import (
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *bufio.Writer) (map[string]map[string]string, error) {
+func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out io.Writer) (map[string]map[string]string, error) {
 	line := liner.NewLiner()
 	defer line.Close()
 	line.SetCtrlCAborts(true)
@@ -50,8 +50,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 				return nil, err
 			}
 		} else {
-			out.WriteString(idg.prompt())
-			out.Flush()
+			out.Write([]byte(idg.prompt()))
 			text, err = in.ReadString('\n')
 			if err != nil {
 				return nil, err
@@ -78,8 +77,7 @@ func Resolve(identifiers []*Identifier, config *Config, in *bufio.Reader, out *b
 				return nil, err
 			}
 		} else {
-			out.WriteString(id.prompt())
-			out.Flush()
+			out.Write([]byte(id.prompt()))
 			text, err = in.ReadString('\n')
 			if err != nil {
 				return nil, err
