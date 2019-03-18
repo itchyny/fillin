@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
 	"reflect"
 	"runtime"
 	"strings"
@@ -101,10 +103,15 @@ sample2.txt
 }
 
 func TestRun(t *testing.T) {
+	dir, err := ioutil.TempDir("", "fillin-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(dir)
 	for _, test := range runTests {
 		in := strings.NewReader(test.in)
 		out := new(bytes.Buffer)
-		cmd, err := Run("./.test/run", test.args, in, out)
+		cmd, err := Run(dir, test.args, in, out)
 		if err != nil {
 			t.Errorf("error occurred unexpectedly: %+v", err)
 		}
@@ -118,6 +125,11 @@ func TestRun_concurrently(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("skip test on Windows")
 	}
+	dir, err := ioutil.TempDir("", "fillin-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(dir)
 	test := runTests[1]
 	var wg sync.WaitGroup
 	for i := 0; i < 20; i++ {
@@ -126,7 +138,7 @@ func TestRun_concurrently(t *testing.T) {
 			defer wg.Done()
 			in := strings.NewReader(test.in)
 			out := new(bytes.Buffer)
-			cmd, err := Run("./.test/concurrently", test.args, in, out)
+			cmd, err := Run(dir, test.args, in, out)
 			if err != nil {
 				t.Errorf("error occurred unexpectedly: %+v", err)
 			}
