@@ -27,7 +27,7 @@ With this `fillin` command line tool, you can
 ## Installation
 ### Homebrew
 ```sh
- $ brew install itchyny/fillin/fillin
+ $ brew install itchyny/tap/fillin
 ```
 
 ### Download binary from GitHub Releases
