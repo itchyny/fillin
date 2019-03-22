@@ -1,5 +1,5 @@
-github.com/itchyny/zshhist-go v0.0.0-20181225084856-8f1ccec07b10 h1:FbfqPYesGZiPneeDahTmtDBiP/s23GKsdxtwpVQa+Z4=
-github.com/itchyny/zshhist-go v0.0.0-20181225084856-8f1ccec07b10/go.mod h1:7ZJC4IPuI84Azr7+rw80I44595wKZ24hKgMIkVswXBk=
+github.com/itchyny/zshhist-go v0.0.0-20190322142727-8204cadf336d h1:VgxzaKQwTOQY0cAPr0Pfiid7e5JfjmmnfarPaXQAw60=
+github.com/itchyny/zshhist-go v0.0.0-20190322142727-8204cadf336d/go.mod h1:rDsW+gmI0bb+BUFv510pJeMmAfOB+LiWUwnFOhgdV8U=
 github.com/mattn/go-runewidth v0.0.3/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/mattn/go-runewidth v0.0.4 h1:2BvfKmzob6Bmd4YsL0zygOqfdFnK7GR4QL06Do4/p7Y=
 github.com/mattn/go-runewidth v0.0.4/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
