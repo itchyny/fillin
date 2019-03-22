@@ -46,7 +46,7 @@ func Exec() error {
 }
 
 func printVersion() {
-	fmt.Printf("%s version %s\n", name, version)
+	fmt.Printf("%s %s\n", name, version)
 }
 
 func printHelp() {
