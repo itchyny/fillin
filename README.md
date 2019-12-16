@@ -1,4 +1,4 @@
-# fillin [![Travis Build Status](https://travis-ci.org/itchyny/fillin.svg?branch=master)](https://travis-ci.org/itchyny/fillin)
+# fillin [![CI Status](https://github.com/itchyny/fillin/workflows/CI/badge.svg)](https://github.com/itchyny/fillin/actions)
 ### fill-in your command and execute
 #### ― _separate action and environment of your command!_ ―
 
