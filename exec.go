@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 )
 
@@ -31,9 +32,9 @@ func Exec() error {
 	if err != nil {
 		return err
 	}
-	configDir := "~/.config/fillin"
-	if dir := os.Getenv("FILLIN_CONFIG_DIR"); dir != "" {
-		configDir = dir
+	configDir, err := getConfigDir()
+	if err != nil {
+		return err
 	}
 	cmd, err := Run(configDir, os.Args[1:], nil, os.Stdout)
 	if err != nil {
@@ -43,6 +44,17 @@ func Exec() error {
 		return err
 	}
 	return nil
+}
+
+func getConfigDir() (string, error) {
+	if dir := os.Getenv("FILLIN_CONFIG_DIR"); dir != "" {
+		return dir, nil
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(home, ".config", name), nil
 }
 
 func printVersion() {

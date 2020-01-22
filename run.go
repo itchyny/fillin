@@ -11,12 +11,10 @@ import (
 	"unicode/utf8"
 
 	"github.com/itchyny/zshhist-go"
-	"github.com/mitchellh/go-homedir"
 )
 
 // Run fillin
-func Run(configDir string, args []string, in io.Reader, out io.Writer) (string, error) {
-	dir, err := homedir.Expand(normalizeFileSeparator(configDir))
+func Run(dir string, args []string, in io.Reader, out io.Writer) (string, error) {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", err
 	}
@@ -67,14 +65,6 @@ func Run(configDir string, args []string, in io.Reader, out io.Writer) (string, 
 	}
 
 	return cmd, nil
-}
-
-func normalizeFileSeparator(path string) string {
-	p := filepath.Join(strings.Split(path, "/")...)
-	if path[0] == '/' {
-		p = "/" + p
-	}
-	return p
 }
 
 func escapeJoin(args []string) string {
