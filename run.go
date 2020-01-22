@@ -2,9 +2,8 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
-	"math/rand"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -38,19 +37,20 @@ func Run(configDir string, args []string, in io.Reader, out io.Writer) (string, 
 	cmd := escapeJoin(filled)
 	rfile.Close() // not be defered due to rename
 
-	tmp := filepath.Join(dir, fmt.Sprintf("fillin.%d-%d.json", os.Getpid(), rand.Int()))
-	defer os.Remove(tmp)
-	wfile, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	tmp, err := ioutil.TempFile(dir, "fillin-*.json")
 	if err != nil {
 		return "", err
 	}
-	if n, err := wfile.Write(w.Bytes()); n != w.Len() || err != nil {
-		wfile.Close()
+	defer func() {
+		tmp.Close()
+		os.Remove(tmp.Name())
+	}()
+	if n, err := tmp.Write(w.Bytes()); n != w.Len() || err != nil {
 		return "", err
 	}
-	wfile.Close() // not be defered due to rename
+	tmp.Close() // not be defered due to rename
 
-	if err := os.Rename(tmp, path); err != nil {
+	if err := os.Rename(tmp.Name(), path); err != nil {
 		return "", err
 	}
 
