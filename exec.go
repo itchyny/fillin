@@ -50,6 +50,9 @@ func getConfigDir() (string, error) {
 	if dir := os.Getenv("FILLIN_CONFIG_DIR"); dir != "" {
 		return dir, nil
 	}
+	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
+		return filepath.Join(dir, name), nil
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
