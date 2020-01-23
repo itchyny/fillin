@@ -1,35 +1,14 @@
 package main
 
 import (
-	"bufio"
-	"io"
 	"strings"
-
-	"github.com/peterh/liner"
 )
 
 // Resolve asks the user to resolve the identifiers
-func Resolve(identifiers []*Identifier, config *Config, in io.Reader, out io.Writer) (map[string]map[string]string, error) {
-	line := liner.NewLiner()
-	defer line.Close()
-	line.SetCtrlCAborts(true)
-	setHistory := func(history []string) {
-		line.ClearHistory()
-		for i := len(history) - 1; i >= 0; i-- {
-			line.AppendHistory(history[i])
-		}
-	}
-	normalizeErr := func(err error) error {
-		if err == liner.ErrPromptAborted || err == io.EOF {
-			return io.EOF
-		}
-		return err
-	}
+func Resolve(identifiers []*Identifier, config *Config, p prompt) (map[string]map[string]string, error) {
 	values := make(map[string]map[string]string)
-	var bin *bufio.Reader
-	if in != nil {
-		bin = bufio.NewReader(in)
-	}
+	p.start()
+	defer p.close()
 
 	scopeAsked := make(map[string]bool)
 	for _, id := range identifiers {
@@ -41,24 +20,14 @@ func Resolve(identifiers []*Identifier, config *Config, in io.Reader, out io.Wri
 		if len(idg.keys) == 0 {
 			continue
 		}
-		var text string
-		var err error
 		history := config.collectScopedPairHistory(idg)
 		if len(history) == 0 {
 			continue
 		}
-		if bin == nil {
-			setHistory(history)
-			text, err = line.Prompt(idg.prompt())
-			if err := normalizeErr(err); err != nil {
-				return nil, err
-			}
-		} else {
-			out.Write([]byte(idg.prompt()))
-			text, err = bin.ReadString('\n')
-			if err != nil {
-				return nil, err
-			}
+		p.setHistory(history)
+		text, err := p.prompt(idg.prompt())
+		if err != nil {
+			return nil, err
 		}
 		xs := strings.Split(strings.TrimSuffix(text, "\n"), ", ")
 		if len(xs) == len(idg.keys) {
@@ -72,20 +41,10 @@ func Resolve(identifiers []*Identifier, config *Config, in io.Reader, out io.Wri
 		if found(values, id) {
 			continue
 		}
-		var text string
-		var err error
-		if bin == nil {
-			setHistory(config.collectHistory(id))
-			text, err = line.Prompt(id.prompt())
-			if err := normalizeErr(err); err != nil {
-				return nil, err
-			}
-		} else {
-			out.Write([]byte(id.prompt()))
-			text, err = bin.ReadString('\n')
-			if err != nil {
-				return nil, err
-			}
+		p.setHistory(config.collectHistory(id))
+		text, err := p.prompt(id.prompt())
+		if err != nil {
+			return nil, err
 		}
 		insert(values, id, strings.TrimSuffix(text, "\n"))
 	}

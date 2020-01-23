@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"io/ioutil"
 	"os"
 	"reflect"
 	"runtime"
-	"strings"
 	"sync"
 	"testing"
 )
@@ -109,9 +107,7 @@ func TestRun(t *testing.T) {
 	}
 	defer os.RemoveAll(dir)
 	for _, test := range runTests {
-		in := strings.NewReader(test.in)
-		out := new(bytes.Buffer)
-		cmd, err := Run(dir, test.args, in, out)
+		cmd, err := Run(dir, test.args, newTestPrompt(test.in))
 		if err != nil {
 			t.Errorf("error occurred unexpectedly: %+v", err)
 		}
@@ -136,9 +132,7 @@ func TestRun_concurrently(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			in := strings.NewReader(test.in)
-			out := new(bytes.Buffer)
-			cmd, err := Run(dir, test.args, in, out)
+			cmd, err := Run(dir, test.args, newTestPrompt(test.in))
 			if err != nil {
 				t.Errorf("error occurred unexpectedly: %+v", err)
 			}

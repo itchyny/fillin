@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -14,7 +13,7 @@ import (
 )
 
 // Run fillin
-func Run(dir string, args []string, in io.Reader, out io.Writer) (string, error) {
+func Run(dir string, args []string, p prompt) (string, error) {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", err
 	}
@@ -28,7 +27,7 @@ func Run(dir string, args []string, in io.Reader, out io.Writer) (string, error)
 		return "", err
 	}
 	w := new(bytes.Buffer)
-	filled, err := Fillin(args, rfile, w, in, out)
+	filled, err := Fillin(args, rfile, w, p)
 	if err != nil {
 		return "", err
 	}

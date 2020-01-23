@@ -36,7 +36,7 @@ func Exec() error {
 	if err != nil {
 		return err
 	}
-	cmd, err := Run(configDir, os.Args[1:], nil, os.Stdout)
+	cmd, err := Run(configDir, os.Args[1:], newPrompt())
 	if err != nil {
 		return err
 	}
