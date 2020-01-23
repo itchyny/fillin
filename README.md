@@ -27,15 +27,12 @@ With this `fillin` command line tool, you can
 ## Installation
 ### Homebrew
 ```sh
- $ brew install itchyny/tap/fillin
+brew install itchyny/tap/fillin
 ```
-
-### Download binary from GitHub Releases
-[Releases・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/releases)
 
 ### Build from source
 ```sh
- $ go get -u github.com/itchyny/fillin
+go get -u github.com/itchyny/fillin
 ```
 
 ## Usage
