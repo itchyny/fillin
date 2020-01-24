@@ -5,9 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"github.com/itchyny/zshhist-go"
 )
@@ -76,55 +77,18 @@ func escapeJoin(args []string) string {
 	return strings.Join(args, " ")
 }
 
+var redirectPattern = regexp.MustCompile(`^\s*[012]?\s*[<>]`)
+
 func escape(arg string) string {
 	switch arg {
 	case "|", "||", "&&", ">", ">>", "<":
 		return arg
 	}
-quote:
-	for _, quote := range []bool{false, true} {
-		s := arg
-		isHead, afterFd, afterRedirect := true, false, false
-		var buf bytes.Buffer
-		if quote {
-			buf.WriteByte('\'')
-		}
-		for len(s) > 0 {
-			c, l := utf8.DecodeRuneInString(s)
-			s = s[l:]
-			if (isHead || afterFd) && strings.ContainsRune("<>", c) && !quote {
-				buf.WriteRune(c)
-				isHead, afterFd, afterRedirect = false, false, true
-				continue
-			} else if afterRedirect && strings.ContainsRune("<>", c) && !quote {
-				buf.WriteRune(c)
-			} else if isHead && strings.ContainsRune("12", c) && !quote {
-				buf.WriteRune(c)
-				isHead, afterFd = false, true
-				continue
-			} else if afterRedirect && strings.ContainsRune("&", c) && !quote {
-				buf.WriteRune(c)
-			} else if strings.ContainsRune("\\'\"`${[|&;<>()*?!", c) && !quote {
-				buf.WriteByte('\\')
-				buf.WriteRune(c)
-			} else if c == rune(' ') && !quote {
-				continue quote
-			} else if c == rune('\t') {
-				if quote {
-					buf.WriteByte('\\')
-					buf.WriteByte('t')
-				} else {
-					continue quote
-				}
-			} else {
-				buf.WriteRune(c)
-			}
-			isHead, afterFd, afterRedirect = false, false, false
-		}
-		if quote {
-			buf.WriteByte('\'')
-		}
-		return buf.String()
+	if redirectPattern.MatchString(arg) {
+		return arg
 	}
-	return ""
+	if !strings.ContainsAny(arg, "|&><[?! \"'\a\b\f\n\r\t\v\\") {
+		return arg
+	}
+	return strconv.Quote(arg)
 }
