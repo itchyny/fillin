@@ -89,43 +89,10 @@ Since the curl endpoint are stored in the shell history and authorization keys a
 In order to have the benefit of this grouping behaviour, it's strongly recommended to prepend the scope name.
 The `psql:` prefix on connecting to PostgreSQL database server, `redis:` prefix for Redis server are useful best practice in my opinion.
 
-## Pipe, redirection and subshell
-The terminal interface of `fillin` has problem with some shell functionalities.
-For example, the following command gets stuck the terminal interface.
-```sh
- $ fillin echo {{message}} | jq .
-{}^M^M^C
-```
-This is because the interface of `fillin` relies on the standard output.
-Instead of connecting the standard output of `fillin` to another command, pass the pipe character as an argument.
-```sh
- $ fillin echo {{message}} \| jq .
- $ # or
- $ fillin echo {{message}} '|' jq .
-```
-Another solution is to quote the whole command.
-```sh
- $ fillin 'echo {{message}} | jq .'
-```
-This is much simple and general method because you can use on subshells as well.
-```sh
- $ fillin 'echo $(cat {{foo}} {{bar}})'
- $ fillin '(echo {{foo}}; cat {{bar}}) | grep func'
-```
-
-The same problem occurs with redirection so escape `>` or quote the whole command.
-```sh
- $ fillin echo {{message}} \> /tmp/message
- $ fillin echo {{message}} '>' /tmp/message
- $ fillin 'echo {{message}} > /tmp/message'
-```
-
 ## Disclaimer
-This command line tool is in its early developing stage.
-The user interface may be changed without any announcement.
-
 This tool is not an encryption tool.
 The command saves the inputted values in a JSON file with no encryption.
+Do not use this tool for security reason.
 
 ## Bug Tracker
 Report bug at [Issues・itchyny/fillin - GitHub](https://github.com/itchyny/fillin/issues).

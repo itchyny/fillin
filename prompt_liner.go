@@ -3,7 +3,8 @@ package main
 import (
 	"io"
 
-	"github.com/peterh/liner"
+	"github.com/itchyny/liner"
+	"github.com/mattn/go-tty"
 )
 
 type realPrompt struct {
@@ -15,7 +16,11 @@ func newPrompt() *realPrompt {
 }
 
 func (p *realPrompt) start() {
-	p.state = liner.NewLiner()
+	tty, err := tty.Open()
+	if err != nil {
+		panic(err)
+	}
+	p.state = liner.NewLinerTTY(tty)
 	p.state.SetCtrlCAborts(true)
 }
 
