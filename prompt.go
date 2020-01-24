@@ -1,7 +1,7 @@
 package main
 
 type prompt interface {
-	start()
+	start() error
 	prompt(string) (string, error)
 	setHistory([]string)
 	close()

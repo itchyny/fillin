@@ -19,7 +19,8 @@ func newTestPrompt(input string) *testPrompt {
 	}
 }
 
-func (p *testPrompt) start() {
+func (p *testPrompt) start() error {
+	return nil
 }
 
 func (p *testPrompt) prompt(message string) (string, error) {

@@ -15,13 +15,14 @@ func newPrompt() *realPrompt {
 	return &realPrompt{}
 }
 
-func (p *realPrompt) start() {
+func (p *realPrompt) start() error {
 	tty, err := tty.Open()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	p.state = liner.NewLinerTTY(tty)
 	p.state.SetCtrlCAborts(true)
+	return nil
 }
 
 func (p *realPrompt) prompt(message string) (string, error) {

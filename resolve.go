@@ -6,10 +6,12 @@ import (
 
 // Resolve asks the user to resolve the identifiers
 func Resolve(identifiers []*Identifier, config *Config, p prompt) (map[string]map[string]string, error) {
-	values := make(map[string]map[string]string)
-	p.start()
+	if err := p.start(); err != nil {
+		return nil, err
+	}
 	defer p.close()
 
+	values := make(map[string]map[string]string)
 	scopeAsked := make(map[string]bool)
 	for _, id := range identifiers {
 		if found(values, id) || id.scope == "" || scopeAsked[id.scope] {
