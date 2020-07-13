@@ -1,8 +1,6 @@
 package main
 
-import (
-	"strings"
-)
+import "strings"
 
 // Resolve asks the user to resolve the identifiers
 func Resolve(identifiers []*Identifier, config *Config, p prompt) (map[string]map[string]string, error) {

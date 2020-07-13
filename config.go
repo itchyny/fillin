@@ -51,10 +51,12 @@ func WriteConfig(w io.Writer, config *Config) error {
 
 func (config *Config) collectHistory(id *Identifier) []string {
 	values := []string{}
+	added := make(map[string]bool)
 	if _, ok := config.Scopes[id.scope]; ok {
 		for _, value := range config.Scopes[id.scope].Values {
-			if v, ok := value[id.key]; ok {
+			if v, ok := value[id.key]; ok && !added[v] {
 				values = append(values, v)
+				added[v] = true
 			}
 		}
 	}
@@ -63,6 +65,7 @@ func (config *Config) collectHistory(id *Identifier) []string {
 
 func (config *Config) collectScopedPairHistory(idg *IdentifierGroup) []string {
 	values := []string{}
+	added := make(map[string]bool)
 	if _, ok := config.Scopes[idg.scope]; ok {
 		for _, value := range config.Scopes[idg.scope].Values {
 			contained := true
@@ -76,7 +79,11 @@ func (config *Config) collectScopedPairHistory(idg *IdentifierGroup) []string {
 				}
 			}
 			if contained {
-				values = append(values, strings.Join(vs, ", "))
+				v := strings.Join(vs, ", ")
+				if !added[v] {
+					values = append(values, v)
+					added[v] = true
+				}
 			}
 		}
 	}

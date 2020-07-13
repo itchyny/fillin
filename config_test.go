@@ -60,6 +60,11 @@ var configTests = []struct {
 							"foo": "Test2, world!",
 							"bar": "test2, test",
 						},
+						{
+							"foo": "Test1, world!",
+							"bar": "test1, test",
+							"qux": "qux",
+						},
 					},
 				},
 			},
@@ -88,6 +93,11 @@ var configTests = []struct {
         {
           "bar": "test2, test",
           "foo": "Test2, world!"
+        },
+        {
+          "bar": "test1, test",
+          "foo": "Test1, world!",
+          "qux": "qux"
         }
       ]
     }
@@ -124,42 +134,61 @@ func TestWriteConfig(t *testing.T) {
 }
 
 func Test_collectHistory(t *testing.T) {
-	hs1 := configTests[2].config.collectHistory(&Identifier{key: "foo"})
-	expected1 := []string{"Hello 1", "Hello 2"}
-	if !reflect.DeepEqual(hs1, expected1) {
-		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
+	testCases := []struct {
+		identifier *Identifier
+		expected   []string
+	}{
+		{
+			identifier: &Identifier{key: "foo"},
+			expected:   []string{"Hello 1", "Hello 2"},
+		},
+		{
+			identifier: &Identifier{key: "baz"},
+			expected:   []string{"world!"},
+		},
+		{
+			&Identifier{scope: "sample", key: "foo"},
+			[]string{"Test1, world!", "Test2, world!"},
+		},
+		{
+			&Identifier{scope: "foo", key: "test"},
+			[]string{},
+		},
 	}
-	hs2 := configTests[2].config.collectHistory(&Identifier{scope: "sample", key: "foo"})
-	expected2 := []string{"Test1, world!", "Test2, world!"}
-	if !reflect.DeepEqual(hs2, expected2) {
-		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
-	}
-	hs3 := configTests[2].config.collectHistory(&Identifier{scope: "foo", key: "test"})
-	expected3 := []string{}
-	if !reflect.DeepEqual(hs3, expected3) {
-		t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
+	for _, tc := range testCases {
+		got := configTests[2].config.collectHistory(tc.identifier)
+		if !reflect.DeepEqual(tc.expected, got) {
+			t.Errorf("collectHistory incorrect (expected: %+v, got: %+v)", tc.expected, got)
+		}
 	}
 }
 
 func Test_collectScopedPairHistory(t *testing.T) {
-	hs1 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{keys: []string{"foo", "baz"}})
-	expected1 := []string{"Hello 1, world!", "Hello 2, world!"}
-	if !reflect.DeepEqual(hs1, expected1) {
-		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected1, hs1)
+	testCases := []struct {
+		identifier *IdentifierGroup
+		expected   []string
+	}{
+		{
+			identifier: &IdentifierGroup{keys: []string{"foo", "baz"}},
+			expected:   []string{"Hello 1, world!", "Hello 2, world!"},
+		},
+		{
+			identifier: &IdentifierGroup{scope: "sample", keys: []string{"foo", "bar"}},
+			expected:   []string{"Test1,\\ world!, test1,\\ test", "Test2,\\ world!, test2,\\ test"},
+		},
+		{
+			identifier: &IdentifierGroup{scope: "sample", keys: []string{"foo", "bar", "baz"}},
+			expected:   []string{"Test1,\\ world!, test1,\\ test, baz"},
+		},
+		{
+			identifier: &IdentifierGroup{scope: "foo", keys: []string{"test"}},
+			expected:   []string{},
+		},
 	}
-	hs2 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"foo", "bar"}})
-	expected2 := []string{"Test1,\\ world!, test1,\\ test", "Test2,\\ world!, test2,\\ test"}
-	if !reflect.DeepEqual(hs2, expected2) {
-		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected2, hs2)
-	}
-	hs3 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "sample", keys: []string{"foo", "bar", "baz"}})
-	expected3 := []string{"Test1,\\ world!, test1,\\ test, baz"}
-	if !reflect.DeepEqual(hs3, expected3) {
-		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected3, hs3)
-	}
-	hs4 := configTests[2].config.collectScopedPairHistory(&IdentifierGroup{scope: "foo", keys: []string{"test"}})
-	expected4 := []string{}
-	if !reflect.DeepEqual(hs4, expected4) {
-		t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", expected4, hs4)
+	for _, tc := range testCases {
+		got := configTests[2].config.collectScopedPairHistory(tc.identifier)
+		if !reflect.DeepEqual(tc.expected, got) {
+			t.Errorf("collectScopedPairHistory incorrect (expected: %+v, got: %+v)", tc.expected, got)
+		}
 	}
 }
