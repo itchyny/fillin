@@ -27,6 +27,7 @@ func Run(dir string, args []string, p prompt) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer rfile.Close()
 	w := new(bytes.Buffer)
 	filled, err := Fillin(args, rfile, w, p)
 	if err != nil {
@@ -46,6 +47,9 @@ func Run(dir string, args []string, p prompt) (string, error) {
 	if n, err := tmp.Write(w.Bytes()); n != w.Len() || err != nil {
 		return "", err
 	}
+	if err := tmp.Sync(); err != nil {
+		return "", err
+	}
 	tmp.Close() // not be defered due to rename
 
 	if err := os.Rename(tmp.Name(), path); err != nil {
@@ -55,13 +59,16 @@ func Run(dir string, args []string, p prompt) (string, error) {
 	if cmd != "" {
 		histfile := filepath.Join(dir, ".fillin.histfile")
 		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
-		defer hfile.Close()
 		if err != nil {
 			return "", err
 		}
+		defer hfile.Close()
 		w := zshhist.NewWriter(hfile)
 		w.Write(zshhist.History{Time: int(time.Now().Unix()), Elapsed: 0, Command: cmd})
 		hfile.Chmod(0600)
+		if err := hfile.Sync(); err != nil {
+			return "", err
+		}
 	}
 
 	return cmd, nil
