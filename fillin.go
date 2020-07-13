@@ -65,19 +65,58 @@ func insertValues(scopes map[string]*Scope, values map[string]map[string]string)
 		if _, ok := scopes[scope]; !ok {
 			scopes[scope] = &Scope{}
 		}
-		newValues := make([]map[string]string, 0)
-		strs := make(map[string]bool)
-		insert := func(v map[string]string) {
-			s := stringifyValue(v)
-			if _, ok := strs[s]; !ok {
-				strs[s] = true
+		newValues := make([]map[string]string, 1, len(scopes[scope].Values)+1)
+		newValues[0] = values[scope]
+		for _, v := range scopes[scope].Values {
+			var skip bool
+		L:
+			for i, w := range newValues {
+				switch mapCompare(w, v) {
+				case mapCompareSubset:
+					newValues[i] = v
+					fallthrough
+				case mapCompareEqual, mapCompareSuperset:
+					skip = true
+					break L
+				}
+			}
+			if !skip {
 				newValues = append(newValues, v)
 			}
 		}
-		insert(values[scope])
-		for _, v := range scopes[scope].Values {
-			insert(v)
-		}
 		scopes[scope].Values = newValues
 	}
+}
+
+const (
+	mapCompareEqual = iota
+	mapCompareSuperset
+	mapCompareSubset
+	mapCompareDiff
+)
+
+func mapCompare(m1, m2 map[string]string) int {
+	ret := mapCompareEqual
+	for v, k := range m1 {
+		if l, ok := m2[v]; ok {
+			if k != l {
+				return mapCompareDiff
+			}
+		} else {
+			ret = mapCompareSuperset
+		}
+	}
+	for v, k := range m2 {
+		if l, ok := m1[v]; ok {
+			if k != l {
+				return mapCompareDiff
+			}
+		} else {
+			if ret == mapCompareSuperset {
+				return mapCompareDiff
+			}
+			ret = mapCompareSubset
+		}
+	}
+	return ret
 }

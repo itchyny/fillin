@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"sort"
 	"strings"
 )
 
@@ -49,24 +47,6 @@ func WriteConfig(w io.Writer, config *Config) error {
 	}
 	_, err = w.Write([]byte{'\n'})
 	return err
-}
-
-func stringifyValue(values map[string]string) string {
-	keys := make([]string, len(values))
-	i := 0
-	for k := range values {
-		keys[i] = k
-		i++
-	}
-	sort.Strings(keys)
-	buf := new(bytes.Buffer)
-	for _, k := range keys {
-		buf.WriteByte('\u0001')
-		buf.WriteString(k)
-		buf.WriteByte('\u0002')
-		buf.WriteString(values[k])
-	}
-	return buf.String()
 }
 
 func (config *Config) collectHistory(id *Identifier) []string {
