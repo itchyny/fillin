@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -21,57 +21,60 @@ func Run(dir string, args []string, p prompt) (string, error) {
 	if err := os.Chmod(dir, 0700); err != nil {
 		return "", err
 	}
-
 	path := filepath.Join(dir, "fillin.json")
-	rfile, err := os.OpenFile(path, os.O_RDONLY|os.O_CREATE, 0600)
+	config, err := readConfig(path)
 	if err != nil {
 		return "", err
 	}
-	defer rfile.Close()
-	w := new(bytes.Buffer)
-	filled, err := Fillin(args, rfile, w, p)
+	filled, err := Fillin(args, config, p)
 	if err != nil {
 		return "", err
 	}
 	cmd := escapeJoin(filled)
-	rfile.Close() // not be defered due to rename
-
-	tmp, err := ioutil.TempFile(dir, "fillin-*.json")
-	if err != nil {
+	if err := writeConfig(path, config); err != nil {
 		return "", err
+	}
+	if err := appendHistory(dir, cmd); err != nil {
+		return "", err
+	}
+	return cmd, nil
+}
+
+func readConfig(path string) (*Config, error) {
+	f, err := os.OpenFile(path, os.O_RDONLY, 0600)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return &Config{}, nil
+		}
+		return nil, err
+	}
+	defer f.Close()
+	var config Config
+	if err := json.NewDecoder(f).Decode(&config); err != nil {
+		return nil, err
+	}
+	return &config, nil
+}
+
+func writeConfig(path string, config *Config) error {
+	tmp, err := ioutil.TempFile(filepath.Dir(path), "fillin-*.json")
+	if err != nil {
+		return err
 	}
 	defer func() {
 		tmp.Close()
 		os.Remove(tmp.Name())
 	}()
-	if n, err := tmp.Write(w.Bytes()); n != w.Len() || err != nil {
-		return "", err
+	enc := json.NewEncoder(tmp)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(config); err != nil {
+		return err
 	}
 	if err := tmp.Sync(); err != nil {
-		return "", err
+		return err
 	}
-	tmp.Close() // not be defered due to rename
-
-	if err := os.Rename(tmp.Name(), path); err != nil {
-		return "", err
-	}
-
-	if cmd != "" {
-		histfile := filepath.Join(dir, ".fillin.histfile")
-		hfile, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
-		if err != nil {
-			return "", err
-		}
-		defer hfile.Close()
-		w := zshhist.NewWriter(hfile)
-		w.Write(zshhist.History{Time: int(time.Now().Unix()), Elapsed: 0, Command: cmd})
-		hfile.Chmod(0600)
-		if err := hfile.Sync(); err != nil {
-			return "", err
-		}
-	}
-
-	return cmd, nil
+	tmp.Close()
+	return os.Rename(tmp.Name(), path)
 }
 
 func escapeJoin(args []string) string {
@@ -98,4 +101,23 @@ func escape(arg string) string {
 		return arg
 	}
 	return strconv.Quote(arg)
+}
+
+func appendHistory(dir, cmd string) error {
+	if cmd == "" {
+		return nil
+	}
+	histfile := filepath.Join(dir, ".fillin.histfile")
+	f, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		f.Chmod(0600)
+		f.Close()
+	}()
+	zshhist.NewWriter(f).Write(
+		zshhist.History{Time: int(time.Now().Unix()), Elapsed: 0, Command: cmd},
+	)
+	return f.Sync()
 }

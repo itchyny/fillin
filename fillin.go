@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"regexp"
 	"strings"
 )
@@ -22,12 +21,8 @@ func collectIdentifiers(args []string) []*Identifier {
 }
 
 // Fillin fills in the command arguments
-func Fillin(args []string, r io.Reader, w io.Writer, p prompt) ([]string, error) {
+func Fillin(args []string, config *Config, p prompt) ([]string, error) {
 	ret := make([]string, len(args))
-	config, err := ReadConfig(r)
-	if err != nil {
-		return nil, err
-	}
 	if config.Scopes == nil {
 		config.Scopes = make(map[string]*Scope)
 	}
@@ -37,9 +32,6 @@ func Fillin(args []string, r io.Reader, w io.Writer, p prompt) ([]string, error)
 	}
 	if !empty(values) {
 		insertValues(config.Scopes, values)
-	}
-	if err := WriteConfig(w, config); err != nil {
-		return nil, err
 	}
 	for i, arg := range args {
 		ret[i] = fillinPattern.ReplaceAllStringFunc(arg, func(match string) string {
