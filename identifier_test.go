@@ -7,40 +7,40 @@ import (
 
 var identifierTests = []struct {
 	values map[string]map[string]string
-	id     Identifier
+	id     *Identifier
 	found  bool
 	value  string
 }{
 	{
 		values: nil,
-		id:     Identifier{key: "foo"},
+		id:     &Identifier{key: "foo"},
 		found:  false,
 	},
 	{
 		values: map[string]map[string]string{"": {"foo": "example"}},
-		id:     Identifier{key: "foo"},
+		id:     &Identifier{key: "foo"},
 		found:  true,
 		value:  "example",
 	},
 	{
 		values: map[string]map[string]string{"": {"foo": "example"}},
-		id:     Identifier{key: "bar"},
+		id:     &Identifier{key: "bar"},
 		found:  false,
 	},
 	{
 		values: map[string]map[string]string{"example": {"foo": "example"}},
-		id:     Identifier{scope: "example", key: "foo"},
+		id:     &Identifier{scope: "example", key: "foo"},
 		found:  true,
 		value:  "example",
 	},
 	{
 		values: map[string]map[string]string{"": {"foo": "example"}},
-		id:     Identifier{scope: "example", key: "foo"},
+		id:     &Identifier{scope: "example", key: "foo"},
 		found:  false,
 	},
 	{
 		values: map[string]map[string]string{"example": {"foo": "example"}},
-		id:     Identifier{scope: "example", key: "bar"},
+		id:     &Identifier{scope: "example", key: "bar"},
 		found:  false,
 	},
 }
@@ -65,7 +65,7 @@ func Test_prompt(t *testing.T) {
 
 func Test_found(t *testing.T) {
 	for _, test := range identifierTests {
-		got := found(test.values, &test.id)
+		got := found(test.values, test.id)
 		if got != test.found {
 			t.Errorf("found not correct for %+v (found: %+v, got: %+v)", test.id, test.found, got)
 		}
@@ -170,7 +170,7 @@ func Test_empty(t *testing.T) {
 
 func Test_lookup(t *testing.T) {
 	for _, test := range identifierTests {
-		got := lookup(test.values, &test.id)
+		got := lookup(test.values, test.id)
 		if got != test.value {
 			t.Errorf("lookup not correct for %+v (expected: %+v, got: %+v)", test.id, test.value, got)
 		}
