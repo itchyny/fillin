@@ -6,7 +6,9 @@ import (
 	"strings"
 )
 
-var fillinPattern = regexp.MustCompile(`{{[A-Za-z][-0-9A-Za-z_]*(:[A-Za-z][-0-9A-Za-z_]*)?}}|\[\[[A-Za-z][-0-9A-Za-z_]*(:[A-Za-z][-0-9A-Za-z_]*)?\]\]`)
+var fillinPattern = regexp.MustCompile(
+	`{{[A-Za-z][-0-9A-Za-z_]*(:[A-Za-z][-0-9A-Za-z_]*)?}}|\[\[[A-Za-z][-0-9A-Za-z_]*(:[A-Za-z][-0-9A-Za-z_]*)?\]\]`,
+)
 
 func collectIdentifiers(args []string) []*Identifier {
 	var identifiers []*Identifier
