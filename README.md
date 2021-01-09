@@ -32,7 +32,7 @@ brew install itchyny/tap/fillin
 
 ### Build from source
 ```sh
-go get -u github.com/itchyny/fillin
+go get github.com/itchyny/fillin
 ```
 
 ## Usage
