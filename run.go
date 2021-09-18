@@ -15,10 +15,10 @@ import (
 
 // Run fillin
 func Run(dir string, args []string, p prompt) (string, error) {
-	if err := os.MkdirAll(dir, 0700); err != nil {
+	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", err
 	}
-	if err := os.Chmod(dir, 0700); err != nil {
+	if err := os.Chmod(dir, 0o700); err != nil {
 		return "", err
 	}
 	path := filepath.Join(dir, "fillin.json")
@@ -41,7 +41,7 @@ func Run(dir string, args []string, p prompt) (string, error) {
 }
 
 func readConfig(path string) (*Config, error) {
-	f, err := os.OpenFile(path, os.O_RDONLY, 0600)
+	f, err := os.OpenFile(path, os.O_RDONLY, 0o600)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return &Config{}, nil
@@ -108,12 +108,12 @@ func appendHistory(dir, cmd string) error {
 		return nil
 	}
 	histfile := filepath.Join(dir, ".fillin.histfile")
-	f, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
+	f, err := os.OpenFile(histfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0o600)
 	if err != nil {
 		return err
 	}
 	defer func() {
-		f.Chmod(0600)
+		f.Chmod(0o600)
 		f.Close()
 	}()
 	zshhist.NewWriter(f).Write(

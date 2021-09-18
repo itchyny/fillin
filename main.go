@@ -6,10 +6,12 @@ import (
 	"os"
 )
 
-var name = "fillin"
-var version = "0.3.2"
-var description = "fill-in your command and execute"
-var author = "itchyny"
+var (
+	name        = "fillin"
+	version     = "0.3.2"
+	description = "fill-in your command and execute"
+	author      = "itchyny"
+)
 
 func main() {
 	if err := Exec(); err != nil {
