@@ -1,6 +1,6 @@
 module github.com/itchyny/fillin
 
-go 1.12
+go 1.16
 
 require (
 	github.com/itchyny/liner v1.2.1
