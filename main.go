@@ -8,7 +8,7 @@ import (
 
 var (
 	name        = "fillin"
-	version     = "0.3.2"
+	version     = "0.3.3"
 	description = "fill-in your command and execute"
 	author      = "itchyny"
 )
