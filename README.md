@@ -1,4 +1,8 @@
-# fillin [![CI Status](https://github.com/itchyny/fillin/workflows/CI/badge.svg)](https://github.com/itchyny/fillin/actions)
+# fillin
+[![CI Status](https://github.com/itchyny/fillin/workflows/CI/badge.svg)](https://github.com/itchyny/fillin/actions)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/itchyny/fillin/blob/main/LICENSE)
+[![release](https://img.shields.io/github/release/itchyny/fillin/all.svg)](https://github.com/itchyny/fillin/releases)
+
 ### fill-in your command and execute
 #### ― _separate action and environment of your command!_ ―
 
