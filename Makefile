@@ -3,7 +3,6 @@ VERSION := $$(make -s show-version)
 VERSION_PATH := .
 BUILD_LDFLAGS := "-s -w"
 GOBIN ?= $(shell go env GOPATH)/bin
-export GO111MODULE=on
 
 .PHONY: all
 all: build
